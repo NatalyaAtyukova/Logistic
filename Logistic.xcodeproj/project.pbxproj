@@ -147,7 +147,6 @@
 		C88F35672BB44B7E00B177F0 = {
 			isa = PBXGroup;
 			children = (
-				C87D71752C49450E00BCF2C9 /* ZoomControlsView.swift */,
 				C88F35722BB44B7E00B177F0 /* Logistic */,
 				C88F35712BB44B7E00B177F0 /* Products */,
 			);
@@ -170,6 +169,7 @@
 				C88F35732BB44B7E00B177F0 /* LogisticApp.swift */,
 				C87D9C422BF65E2A003354F2 /* AlertManager.swift */,
 				C8F5AC6A2C3AF86100420675 /* FirebaseModel.swift */,
+				C87D71752C49450E00BCF2C9 /* ZoomControlsView.swift */,
 				C82DC3E22C3AA1E2004CE6C8 /* DaDataAddress */,
 				C82D59832BB598CE00A83769 /* GoogleService-Info.plist */,
 				C88F35772BB44B8100B177F0 /* Assets.xcassets */,
