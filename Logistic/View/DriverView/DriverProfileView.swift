@@ -1,14 +1,17 @@
 import SwiftUI
+import Firebase
 
 struct DriverProfileView: View {
     @State private var firstName: String = ""
     @State private var lastName: String = ""
-    @State private var driverLiscense: String = ""
+    @State private var driverLicense: String = ""
     @State internal var selectedImage: UIImage?
+    @State private var profileSaved: Bool = false
+    @State private var navigateToDriverTab: Bool = false
+    @Environment(\.presentationMode) var presentationMode // Добавляем presentationMode для закрытия представления
     
     var body: some View {
         VStack {
-            
             if let image = selectedImage {
                 Image(uiImage: image)
                     .resizable()
@@ -25,9 +28,6 @@ struct DriverProfileView: View {
                     .frame(width: 100, height: 100)
                     .padding()
             }
-                
-            
-// не загружается в circle доделать
             
             TextField("Имя", text: $firstName)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -37,10 +37,10 @@ struct DriverProfileView: View {
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
             
-            TextField("Номер ВУ", text: $driverLiscense)
+            TextField("Номер ВУ", text: $driverLicense)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
-
+            
             Button("Выбрать фото") {
                 let picker = UIImagePickerController()
                 picker.allowsEditing = false
@@ -49,28 +49,50 @@ struct DriverProfileView: View {
                 UIApplication.shared.windows.first?.rootViewController?.present(picker, animated: true, completion: nil)
             }
             .padding()
-
-            NavigationLink(destination: DriverTabView()) {
-                Text("Сохранить профиль")
+            
+            Button("Сохранить профиль") {
+                saveProfile()
             }
             .padding()
+            
+            NavigationLink(destination: DriverTabView(), isActive: $navigateToDriverTab) {
+                EmptyView()
+            }
+            .frame(width: 0, height: 0)
+            .hidden()
         }
         .padding()
     }
-
+    
     func makeCoordinator() -> Coordinator {
         return Coordinator(parent: self)
     }
-
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        guard let image = info[.originalImage] as? UIImage else { return }
-        selectedImage = image
-
-        picker.dismiss(animated: true, completion: nil)
-    }
-
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        picker.dismiss(animated: true, completion: nil)
+    
+    func saveProfile() {
+        let db = Firestore.firestore()
+        guard let driverID = Auth.auth().currentUser?.uid else {
+            print("Ошибка: Пользователь не аутентифицирован")
+            return
+        }
+        
+        let data: [String: Any] = [
+            "driverID": driverID,
+            "firstName": firstName,
+            "lastName": lastName,
+            "driverLicense": driverLicense
+            // Можно также добавить обработку изображения, если требуется сохранить его
+        ]
+        
+        db.collection("DriverProfiles").document(driverID).setData(data) { error in
+            if let error = error {
+                print("Ошибка при сохранении профиля: \(error.localizedDescription)")
+            } else {
+                print("Профиль успешно сохранен")
+                profileSaved = true
+                navigateToDriverTab = true
+                presentationMode.wrappedValue.dismiss() // Закрываем текущее представление
+            }
+        }
     }
 }
 
@@ -92,6 +114,8 @@ class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerContro
         picker.dismiss(animated: true, completion: nil)
     }
 }
+
+
 
 struct DriverProfileView_Previews: PreviewProvider {
     static var previews: some View {
