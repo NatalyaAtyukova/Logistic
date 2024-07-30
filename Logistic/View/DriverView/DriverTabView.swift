@@ -352,6 +352,7 @@ func formatDate(_ date: Date) -> String {
     return dateFormatter.string(from: date)
 }
 
+
 struct ActiveOrders: View {
     @ObservedObject var alertManager: AlertManager
     @Binding var orders: [OrderItem]
@@ -371,17 +372,18 @@ struct ActiveOrders: View {
                     .padding(.bottom, 10)
                 
                 // Список заказов
-                List(orders) { order in
-                    OrderRow(order: order,
-                             onSelect: {
-                                self.selectedOrder = order
-                                self.showingOrderOnMap = true
-                             },
-                             onActions: {
-                                self.selectedOrder = order
-                                self.showingActionSheet = true
-                             })
-                    .padding()
+                List {
+                    ForEach(orders) { order in
+                        OrderRow(order: order,
+                                 onSelect: {
+                                    self.selectedOrder = order
+                                    self.showingOrderOnMap = true
+                                 },
+                                 onActions: {
+                                    self.selectedOrder = order
+                                    self.showingActionSheet = true
+                                 })
+                    }
                 }
                 .listStyle(InsetGroupedListStyle()) // Современный стиль списка
                 .onAppear {
@@ -530,16 +532,13 @@ struct MapViewWithOrder: View {
     }
 }
 
-
-
-
-//
 func getDriversOrders(alertManager: AlertManager, completion: @escaping ([OrderItem]?, Error?) -> Void) {
     let db = Firestore.firestore()
 
     if let currentUser = Auth.auth().currentUser {
         db.collection("OrdersList")
             .whereField("driverID", isEqualTo: currentUser.uid)
+            .whereField("status", isEqualTo: "В пути") // Добавлен фильтр по статусу "В пути"
             .getDocuments { (snapshot, error) in
                 if let error = error {
                     alertManager.showError(message: "Ошибка при получении заказов: \(error.localizedDescription)")
@@ -612,16 +611,12 @@ func getDriversOrders(alertManager: AlertManager, completion: @escaping ([OrderI
 }
 
 
-
-
-
-// Представление списка чатов водителя
 struct ChatDriverView: View {
-    @State private var existingChats: [ChatInfo] = [] // Массив с информацией о существующих чатах
-    @State private var selectedChat: ChatInfo? // Выбранный чат
-    @State private var isChatViewPresented = false // Флаг для отображения чата
+    @State private var existingChats: [ChatInfo] = []
+    @State private var selectedChat: ChatInfo?
+    @State private var isChatViewPresented = false
     
-    @ObservedObject var alertManager: AlertManager // Ваш экземпляр AlertManager
+    @ObservedObject var alertManager: AlertManager
     
     let db = Firestore.firestore()
     let currentUser = Auth.auth().currentUser
@@ -629,22 +624,20 @@ struct ChatDriverView: View {
     var body: some View {
         NavigationView {
             VStack {
-                Button(action: {
-                    createChatsForOrders()
-                }) {
-                    Text("Обновить чаты")
-                }
-                .padding()
-                
-                List(existingChats, id: \.id) { chat in
-                    VStack(alignment: .leading) {
-                        Text("Идентификатор заказа: \(chat.orderId)")
-                        Text("Адрес получателя: \(chat.recipientAddress)")
-                        Text("Адрес отправителя: \(chat.senderAddress)")
-                    }
-                    .onTapGesture {
-                        selectedChat = chat
-                        isChatViewPresented = true
+                if existingChats.isEmpty {
+                    Text("Нет доступных чатов.")
+                        .padding()
+                } else {
+                    List(existingChats, id: \.id) { chat in
+                        VStack(alignment: .leading) {
+                            Text("Идентификатор заказа: \(chat.orderId)")
+                            Text("Адрес получателя: \(chat.recipientAddress)")
+                            Text("Адрес отправителя: \(chat.senderAddress)")
+                        }
+                        .onTapGesture {
+                            selectedChat = chat
+                            isChatViewPresented = true
+                        }
                     }
                 }
             }
@@ -657,104 +650,122 @@ struct ChatDriverView: View {
         }
         .onAppear {
             loadExistingChats()
+            startListeningForNewOrders()
         }
     }
     
-    func createNewChat(orderId: String, recipientAddress: String, senderAddress: String, driverId: String, adminId: String) {
-        // Проверяем, существует ли чат для данного заказа
+    private func createNewChat(orderId: String, recipientAddress: String, senderAddress: String, driverId: String, adminId: String) {
+        print("Создание нового чата для заказа \(orderId)")
         db.collection("Chats")
             .whereField("orderId", isEqualTo: orderId)
             .getDocuments { (chatQuerySnapshot, chatError) in
                 if let chatError = chatError {
-                    print("Error checking chat existence: \(chatError)")
+                    alertManager.showError(message: "Ошибка при проверке существования чата: \(chatError.localizedDescription)")
                 } else if let chatDocuments = chatQuerySnapshot?.documents, !chatDocuments.isEmpty {
-                    // Если чат уже существует, просто обновляем список чатов
+                    print("Чат уже существует для заказа \(orderId)")
                     loadExistingChats()
                 } else {
-                    // Если чата нет, создаем новый
-                    db.collection("Chats").addDocument(data: [
+                    let chatId = UUID().uuidString.uppercased() // Создаем идентификатор в формате UUID
+                    db.collection("Chats").document(chatId).setData([
                         "orderId": orderId,
                         "recipientAddress": recipientAddress,
                         "senderAddress": senderAddress,
                         "adminId": adminId,
                         "driverId": driverId,
-                        "participants": [adminId, driverId] // Участники чата
+                        "participants": [adminId, driverId]
                     ]) { error in
                         if let error = error {
-                            print("Error creating chat document: \(error.localizedDescription)")
+                            alertManager.showError(message: "Ошибка при создании документа чата: \(error.localizedDescription)")
                             return
                         }
-                        
-                        // Обновляем список чатов
+                        print("Чат успешно создан для заказа \(orderId)")
                         loadExistingChats()
                     }
                 }
             }
     }
     
-    func loadExistingChats() {
-        if let currentUser = currentUser {
-            let driverId = currentUser.uid
-            
-            db.collection("Chats")
-                .whereField("driverId", isEqualTo: driverId)
-                .getDocuments { (querySnapshot, error) in
-                    if let error = error {
-                        print("Error getting documents: \(error)")
-                    } else {
-                        existingChats = querySnapshot?.documents.compactMap { document in
-                            let data = document.data()
-                            let orderId = data["orderId"] as? String ?? ""
-                            let recipientAddress = data["recipientAddress"] as? String ?? ""
-                            let senderAddress = data["senderAddress"] as? String ?? ""
-                            let chatId = document.documentID // Получаем chatId из документа Firestore
-                            let participants = data["participants"] as? [String] ?? []
-                            return ChatInfo(id: chatId, orderId: orderId, recipientAddress: recipientAddress, senderAddress: senderAddress, participants: participants)
-                        } ?? []
-                    }
-                }
-        } else {
-            print("User is not authenticated.")
+    private func loadExistingChats() {
+        guard let currentUser = currentUser else {
+            alertManager.showError(message: "Пользователь не аутентифицирован.")
+            return
         }
+        
+        let driverId = currentUser.uid
+        print("Загрузка чатов для водителя с ID \(driverId)")
+        
+        db.collection("Chats")
+            .whereField("driverId", isEqualTo: driverId)
+            .addSnapshotListener { querySnapshot, error in
+                if let error = error {
+                    alertManager.showError(message: "Ошибка при получении чатов: \(error.localizedDescription)")
+                } else {
+                    guard let documents = querySnapshot?.documents else {
+                        print("Ошибка: документы пусты")
+                        return
+                    }
+                    print("Количество документов: \(documents.count)")
+                    
+                    existingChats = documents.compactMap { document in
+                        let data = document.data()
+                        guard let orderId = data["orderId"] as? String,
+                              let recipientAddress = data["recipientAddress"] as? String,
+                              let senderAddress = data["senderAddress"] as? String,
+                              let chatId = document.documentID as? String,
+                              let participants = data["participants"] as? [String] else {
+                            print("Ошибка: недостаточно данных для документа чата \(document.documentID)")
+                            return nil
+                        }
+                        return ChatInfo(id: chatId, orderId: orderId, recipientAddress: recipientAddress, senderAddress: senderAddress, participants: participants)
+                    }
+                    print("Найдено \(existingChats.count) чатов для водителя")
+                }
+            }
     }
     
-    func createChatsForOrders() {
-        if let currentUser = currentUser {
-            let driverId = currentUser.uid
-            
-            db.collection("OrdersList")
-                .whereField("driverID", isEqualTo: driverId)
-                .getDocuments { (querySnapshot, error) in
-                    if let error = error {
-                        print("Error getting documents: \(error)")
-                    } else {
-                        for document in querySnapshot!.documents {
-                            let orderData = document.data()
-                            if let orderId = orderData["orderNumber"] as? String,
-                               let recipientAddress = orderData["recipientAddress"] as? String,
-                               let senderAddress = orderData["senderAddress"] as? String,
-                               let adminId = orderData["adminID"] as? String {
-                                // Проверяем, существует ли чат для данного заказа
-                                if existingChats.contains(where: { $0.orderId == orderId }) {
-                                    print("Chat for order \(orderId) already exists")
-                                } else {
-                                    createNewChat(orderId: orderId, recipientAddress: recipientAddress, senderAddress: senderAddress, driverId: driverId, adminId: adminId)
-                                }
+    private func startListeningForNewOrders() {
+        guard let currentUser = currentUser else {
+            alertManager.showError(message: "Пользователь не аутентифицирован.")
+            return
+        }
+        
+        let driverId = currentUser.uid
+        print("Начало прослушивания новых заказов для водителя с ID \(driverId)")
+        
+        db.collection("OrdersList")
+            .whereField("driverID", isEqualTo: driverId)
+            .whereField("status", isEqualTo: "В пути")
+            .addSnapshotListener { querySnapshot, error in
+                guard let snapshot = querySnapshot else {
+                    alertManager.showError(message: "Ошибка при прослушивании заказов: \(error?.localizedDescription ?? "Неизвестная ошибка")")
+                    return
+                }
+                
+                snapshot.documentChanges.forEach { change in
+                    if change.type == .added {
+                        let orderData = change.document.data()
+                        if let orderId = orderData["id"] as? String,
+                           let recipientAddress = orderData["recipientAddress"] as? String,
+                           let senderAddress = orderData["senderAddress"] as? String,
+                           let adminId = orderData["adminID"] as? String {
+                            if existingChats.contains(where: { $0.orderId == orderId }) {
+                                print("Чат для заказа \(orderId) уже существует")
                             } else {
-                                print("Missing data for order: \(document.documentID)")
+                                print("Создание нового чата для нового заказа \(orderId)")
+                                createNewChat(orderId: orderId, recipientAddress: recipientAddress, senderAddress: senderAddress, driverId: driverId, adminId: adminId)
                             }
+                        } else {
+                            alertManager.showError(message: "Недостаточно данных для заказа")
                         }
                     }
                 }
-        } else {
-            print("User is not authenticated.")
-        }
+            }
     }
 }
 
 
-//Map
 
+//Map
 
 struct MapDriverView: UIViewRepresentable {
     @Binding var orders: [OrderItem]
@@ -764,13 +775,13 @@ struct MapDriverView: UIViewRepresentable {
     func makeUIView(context: Context) -> MKMapView {
         let mapView = MKMapView()
         mapView.delegate = context.coordinator
-        mapView.showsUserLocation = true // Показывать текущее местоположение пользователя
+        mapView.showsUserLocation = true
         return mapView
     }
 
     func updateUIView(_ mapView: MKMapView, context: Context) {
         mapView.removeAnnotations(mapView.annotations)
-        mapView.removeOverlays(mapView.overlays) // Remove previous routes
+        mapView.removeOverlays(mapView.overlays)
 
         // Добавление заказов в качестве аннотаций на карте
         let orderAnnotations = orders.flatMap { order -> [MKPointAnnotation] in
@@ -778,13 +789,13 @@ struct MapDriverView: UIViewRepresentable {
             
             let senderAnnotation = MKPointAnnotation()
             senderAnnotation.title = "Отправление"
-            senderAnnotation.subtitle = "\(order.senderAddress)" // Используем senderAddress для отображения в аннотации
+            senderAnnotation.subtitle = "\(order.senderAddress)"
             senderAnnotation.coordinate = CLLocationCoordinate2D(latitude: order.senderLatitude, longitude: order.senderLongitude)
             annotations.append(senderAnnotation)
             
             let recipientAnnotation = MKPointAnnotation()
             recipientAnnotation.title = "Получение"
-            recipientAnnotation.subtitle = "\(order.recipientAddress)" // Используем recipientAddress для отображения в аннотации
+            recipientAnnotation.subtitle = "\(order.recipientAddress)"
             recipientAnnotation.coordinate = CLLocationCoordinate2D(latitude: order.recipientLatitude, longitude: order.recipientLongitude)
             annotations.append(recipientAnnotation)
             
@@ -793,8 +804,15 @@ struct MapDriverView: UIViewRepresentable {
         mapView.addAnnotations(orderAnnotations)
 
         // Устанавливаем регион, чтобы охватить все аннотации
-        if let firstAnnotation = orderAnnotations.first {
-            let region = MKCoordinateRegion(center: firstAnnotation.coordinate, span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05))
+        if !orderAnnotations.isEmpty {
+            var minLat = orderAnnotations.map { $0.coordinate.latitude }.min()!
+            var maxLat = orderAnnotations.map { $0.coordinate.latitude }.max()!
+            var minLon = orderAnnotations.map { $0.coordinate.longitude }.min()!
+            var maxLon = orderAnnotations.map { $0.coordinate.longitude }.max()!
+
+            let span = MKCoordinateSpan(latitudeDelta: (maxLat - minLat) * 1.5, longitudeDelta: (maxLon - minLon) * 1.5)
+            let center = CLLocationCoordinate2D(latitude: (minLat + maxLat) / 2, longitude: (minLon + maxLon) / 2)
+            let region = MKCoordinateRegion(center: center, span: span)
             mapView.setRegion(region, animated: true)
         }
 
@@ -864,7 +882,6 @@ struct MapDriverView: UIViewRepresentable {
         }
     }
 }
-
 
 
 //запись в бд геолокации
