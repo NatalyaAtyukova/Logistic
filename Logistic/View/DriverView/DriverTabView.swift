@@ -609,8 +609,6 @@ func getDriversOrders(alertManager: AlertManager, completion: @escaping ([OrderI
             }
     }
 }
-
-
 struct ChatDriverView: View {
     @State private var existingChats: [ChatInfo] = []
     @State private var selectedChat: ChatInfo?
@@ -656,33 +654,24 @@ struct ChatDriverView: View {
     
     private func createNewChat(orderId: String, recipientAddress: String, senderAddress: String, driverId: String, adminId: String) {
         print("Создание нового чата для заказа \(orderId)")
-        db.collection("Chats")
-            .whereField("orderId", isEqualTo: orderId)
-            .getDocuments { (chatQuerySnapshot, chatError) in
-                if let chatError = chatError {
-                    alertManager.showError(message: "Ошибка при проверке существования чата: \(chatError.localizedDescription)")
-                } else if let chatDocuments = chatQuerySnapshot?.documents, !chatDocuments.isEmpty {
-                    print("Чат уже существует для заказа \(orderId)")
-                    loadExistingChats()
-                } else {
-                    let chatId = UUID().uuidString.uppercased() // Создаем идентификатор в формате UUID
-                    db.collection("Chats").document(chatId).setData([
-                        "orderId": orderId,
-                        "recipientAddress": recipientAddress,
-                        "senderAddress": senderAddress,
-                        "adminId": adminId,
-                        "driverId": driverId,
-                        "participants": [adminId, driverId]
-                    ]) { error in
-                        if let error = error {
-                            alertManager.showError(message: "Ошибка при создании документа чата: \(error.localizedDescription)")
-                            return
-                        }
-                        print("Чат успешно создан для заказа \(orderId)")
-                        loadExistingChats()
-                    }
-                }
+        let chatId = UUID().uuidString.uppercased() // Создаем идентификатор в формате UUID
+        let chatData: [String: Any] = [
+            "id": chatId,
+            "orderId": orderId,
+            "recipientAddress": recipientAddress,
+            "senderAddress": senderAddress,
+            "participants": [adminId, driverId] // Добавляем участников
+        ]
+        
+        db.collection("Chats").document(chatId).setData(chatData) { error in
+            if let error = error {
+                print("Ошибка при создании документа чата: \(error.localizedDescription)")
+                alertManager.showError(message: "Ошибка при создании документа чата: \(error.localizedDescription)")
+                return
             }
+            print("Чат успешно создан для заказа \(orderId)")
+            loadExistingChats()
+        }
     }
     
     private func loadExistingChats() {
@@ -695,9 +684,10 @@ struct ChatDriverView: View {
         print("Загрузка чатов для водителя с ID \(driverId)")
         
         db.collection("Chats")
-            .whereField("driverId", isEqualTo: driverId)
+            .whereField("participants", arrayContains: driverId)
             .addSnapshotListener { querySnapshot, error in
                 if let error = error {
+                    print("Ошибка при получении чатов: \(error.localizedDescription)")
                     alertManager.showError(message: "Ошибка при получении чатов: \(error.localizedDescription)")
                 } else {
                     guard let documents = querySnapshot?.documents else {
@@ -711,7 +701,7 @@ struct ChatDriverView: View {
                         guard let orderId = data["orderId"] as? String,
                               let recipientAddress = data["recipientAddress"] as? String,
                               let senderAddress = data["senderAddress"] as? String,
-                              let chatId = document.documentID as? String,
+                              let chatId = data["id"] as? String,
                               let participants = data["participants"] as? [String] else {
                             print("Ошибка: недостаточно данных для документа чата \(document.documentID)")
                             return nil
@@ -762,7 +752,6 @@ struct ChatDriverView: View {
             }
     }
 }
-
 
 
 //Map
