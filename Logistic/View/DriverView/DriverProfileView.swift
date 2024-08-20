@@ -4,121 +4,162 @@ import Firebase
 struct DriverProfileView: View {
     @State private var firstName: String = ""
     @State private var lastName: String = ""
-    @State private var driverLicense: String = ""
-    @State internal var selectedImage: UIImage?
+    @State private var licenseNumber: String = ""
+    @State private var phoneNumber: String = "+7"
     @State private var profileSaved: Bool = false
     @State private var navigateToDriverTab: Bool = false
-    @Environment(\.presentationMode) var presentationMode // Добавляем presentationMode для закрытия представления
+    @Environment(\.presentationMode) var presentationMode
+
+    var userID: String
+    var email: String
+
+    // Ошибки валидации
+    @State private var firstNameError: String? = nil
+    @State private var lastNameError: String? = nil
+    @State private var licenseError: String? = nil
+    @State private var phoneError: String? = nil
+
+    // Ограничение ввода по символам
+    private let maxPhoneNumberLength = 12  // +7 и 10 цифр
+    private let maxLicenseNumberLength = 10 // Водительское удостоверение - 10 символов
+
+    // Валидация полей
+    func validateFields() -> Bool {
+        firstNameError = nil
+        lastNameError = nil
+        licenseError = nil
+        phoneError = nil
+        
+        var isValid = true
+
+        if !Validation.isValidName(firstName) {
+            firstNameError = "Имя должно содержать только русские буквы"
+            isValid = false
+        }
+
+        if !Validation.isValidName(lastName) {
+            lastNameError = "Фамилия должна содержать только русские буквы"
+            isValid = false
+        }
+
+        if !Validation.isNotEmpty(licenseNumber) || licenseNumber.count != maxLicenseNumberLength {
+            licenseError = "Номер водительского удостоверения должен содержать 10 символов"
+            isValid = false
+        }
+
+        if !Validation.isValidPhoneNumber(phoneNumber) || phoneNumber.count != maxPhoneNumberLength {
+            phoneError = "Номер телефона должен содержать 12 символов и начинаться с +7"
+            isValid = false
+        }
+
+        return isValid
+    }
     
     var body: some View {
         VStack {
-            if let image = selectedImage {
-                Image(uiImage: image)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 100, height: 100)
-                    .clipShape(Circle())
-                    .overlay(Circle().stroke(Color.white, lineWidth: 2))
-                    .shadow(radius: 5)
-            } else {
-                Image(systemName: "person.circle.fill")
-                    .resizable()
-                    .scaledToFit()
-                    .clipShape(Circle())
-                    .frame(width: 100, height: 100)
+            VStack(alignment: .leading) {
+                TextField("Имя", text: $firstName)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding()
+                    .border(firstNameError != nil ? Color.red : Color.clear, width: 2)
+                if let firstNameError = firstNameError {
+                    Text(firstNameError)
+                        .foregroundColor(.red)
+                        .font(.caption)
+                        .padding(.leading)
+                }
             }
-            
-            TextField("Имя", text: $firstName)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
-            
-            TextField("Фамилия", text: $lastName)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
-            
-            TextField("Номер ВУ", text: $driverLicense)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
-            
-            Button("Выбрать фото") {
-                let picker = UIImagePickerController()
-                picker.allowsEditing = false
-                picker.sourceType = .photoLibrary
-                picker.delegate = makeCoordinator()
-                UIApplication.shared.windows.first?.rootViewController?.present(picker, animated: true, completion: nil)
+
+            VStack(alignment: .leading) {
+                TextField("Фамилия", text: $lastName)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding()
+                    .border(lastNameError != nil ? Color.red : Color.clear, width: 2)
+                if let lastNameError = lastNameError {
+                    Text(lastNameError)
+                        .foregroundColor(.red)
+                        .font(.caption)
+                        .padding(.leading)
+                }
             }
-            .padding()
-            
-            Button("Сохранить профиль") {
-                saveProfile()
+
+            VStack(alignment: .leading) {
+                TextField("Номер водительского удостоверения", text: $licenseNumber)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding()
+                    .keyboardType(.numberPad)
+                    .onChange(of: licenseNumber) { newValue in
+                        if newValue.count > maxLicenseNumberLength {
+                            licenseNumber = String(newValue.prefix(maxLicenseNumberLength))
+                        }
+                    }
+                    .border(licenseError != nil ? Color.red : Color.clear, width: 2)
+                if let licenseError = licenseError {
+                    Text(licenseError)
+                        .foregroundColor(.red)
+                        .font(.caption)
+                        .padding(.leading)
+                }
+            }
+
+            VStack(alignment: .leading) {
+                TextField("Телефон", text: $phoneNumber)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding()
+                    .keyboardType(.phonePad)
+                    .onChange(of: phoneNumber) { newValue in
+                        if newValue.count > maxPhoneNumberLength {
+                            phoneNumber = String(newValue.prefix(maxPhoneNumberLength))
+                        }
+                    }
+                    .border(phoneError != nil ? Color.red : Color.clear, width: 2)
+                if let phoneError = phoneError {
+                    Text(phoneError)
+                        .foregroundColor(.red)
+                        .font(.caption)
+                        .padding(.leading)
+                }
+            }
+
+            Button(action: {
+                if validateFields() {
+                    saveProfile()
+                } else {
+                    print("Заполните все поля корректно")
+                }
+            }) {
+                Text("Сохранить профиль")
             }
             .padding()
             
             NavigationLink(destination: DriverTabView(), isActive: $navigateToDriverTab) {
                 EmptyView()
             }
-            .frame(width: 0, height: 0)
-            .hidden()
         }
-        .padding()
+        .navigationTitle("Профиль Водителя")
     }
-    
-    func makeCoordinator() -> Coordinator {
-        return Coordinator(parent: self)
-    }
-    
+
     func saveProfile() {
         let db = Firestore.firestore()
-        guard let driverID = Auth.auth().currentUser?.uid else {
-            print("Ошибка: Пользователь не аутентифицирован")
-            return
-        }
         
         let data: [String: Any] = [
-            "driverID": driverID,
+            "driverID": userID,
+            "email": email,
             "firstName": firstName,
             "lastName": lastName,
-            "driverLicense": driverLicense
-            // Можно также добавить обработку изображения, если требуется сохранить его
+            "licenseNumber": licenseNumber,
+            "phoneNumber": phoneNumber,
+            "role": "driver"
         ]
         
-        db.collection("DriverProfiles").document(driverID).setData(data) { error in
+        db.collection("DriverProfiles").document(userID).setData(data) { error in
             if let error = error {
                 print("Ошибка при сохранении профиля: \(error.localizedDescription)")
             } else {
-                print("Профиль успешно сохранен")
                 profileSaved = true
                 navigateToDriverTab = true
-                presentationMode.wrappedValue.dismiss() // Закрываем текущее представление
+                presentationMode.wrappedValue.dismiss()
             }
         }
-    }
-}
-
-class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
-    var parent: DriverProfileView
-
-    init(parent: DriverProfileView) {
-        self.parent = parent
-    }
-
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        guard let image = info[.originalImage] as? UIImage else { return }
-        parent.selectedImage = image
-
-        picker.dismiss(animated: true, completion: nil)
-    }
-
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        picker.dismiss(animated: true, completion: nil)
-    }
-}
-
-
-
-struct DriverProfileView_Previews: PreviewProvider {
-    static var previews: some View {
-        DriverProfileView()
     }
 }

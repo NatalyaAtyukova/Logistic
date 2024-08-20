@@ -10,7 +10,7 @@
 		C803D8482BB4A86E00086411 /* AdminProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C803D8472BB4A86E00086411 /* AdminProfileView.swift */; };
 		C803D84C2BB4B2A100086411 /* AdminTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C803D84B2BB4B2A100086411 /* AdminTabView.swift */; };
 		C803D8562BB4B5BC00086411 /* DriverTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C803D8552BB4B5BC00086411 /* DriverTabView.swift */; };
-		C82D59842BB598CE00A83769 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C82D59832BB598CE00A83769 /* GoogleService-Info.plist */; };
+		C827D7302C728411001C4EE5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C827D72F2C728411001C4EE5 /* GoogleService-Info.plist */; };
 		C82DC3E12C3A9915004CE6C8 /* AddressAutocompleteTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C82DC3E02C3A9915004CE6C8 /* AddressAutocompleteTextField.swift */; };
 		C87D71762C49450E00BCF2C9 /* ZoomControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C87D71752C49450E00BCF2C9 /* ZoomControlsView.swift */; };
 		C87D9C432BF65E2A003354F2 /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C87D9C422BF65E2A003354F2 /* AlertManager.swift */; };
@@ -27,6 +27,7 @@
 		C88F35B12BB4550900B177F0 /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C88F35B02BB4550900B177F0 /* RegisterView.swift */; };
 		C88F35B32BB45A5200B177F0 /* DriverProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C88F35B22BB45A5200B177F0 /* DriverProfileView.swift */; };
 		C8A4A8382BC04CC600164865 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8A4A8372BC04CC600164865 /* ChatView.swift */; };
+		C8BA16A72C73752400DBF4DD /* Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BA16A62C73752400DBF4DD /* Validation.swift */; };
 		C8F5AC6B2C3AF86100420675 /* FirebaseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8F5AC6A2C3AF86100420675 /* FirebaseModel.swift */; };
 		C8F5CF022C397472003E2E40 /* DaDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8F5CF012C397472003E2E40 /* DaDataService.swift */; };
 		C8F5CF042C39750F003E2E40 /* SuggestionsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8F5CF032C39750F003E2E40 /* SuggestionsListView.swift */; };
@@ -53,7 +54,7 @@
 		C803D8472BB4A86E00086411 /* AdminProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminProfileView.swift; sourceTree = "<group>"; };
 		C803D84B2BB4B2A100086411 /* AdminTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminTabView.swift; sourceTree = "<group>"; };
 		C803D8552BB4B5BC00086411 /* DriverTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriverTabView.swift; sourceTree = "<group>"; };
-		C82D59832BB598CE00A83769 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		C827D72F2C728411001C4EE5 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C82DC3E02C3A9915004CE6C8 /* AddressAutocompleteTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressAutocompleteTextField.swift; sourceTree = "<group>"; };
 		C87D71752C49450E00BCF2C9 /* ZoomControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomControlsView.swift; sourceTree = "<group>"; };
 		C87D9C422BF65E2A003354F2 /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
@@ -68,6 +69,7 @@
 		C88F35B02BB4550900B177F0 /* RegisterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
 		C88F35B22BB45A5200B177F0 /* DriverProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriverProfileView.swift; sourceTree = "<group>"; };
 		C8A4A8372BC04CC600164865 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
+		C8BA16A62C73752400DBF4DD /* Validation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validation.swift; sourceTree = "<group>"; };
 		C8F5AC6A2C3AF86100420675 /* FirebaseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseModel.swift; sourceTree = "<group>"; };
 		C8F5CF012C397472003E2E40 /* DaDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaDataService.swift; sourceTree = "<group>"; };
 		C8F5CF032C39750F003E2E40 /* SuggestionsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionsListView.swift; sourceTree = "<group>"; };
@@ -129,7 +131,6 @@
 			children = (
 				C88F35B22BB45A5200B177F0 /* DriverProfileView.swift */,
 				C803D8552BB4B5BC00086411 /* DriverTabView.swift */,
-				C88CD1DC2C553C05000E9317 /* CityAutocompleteTextField.swift */,
 			);
 			path = DriverView;
 			sourceTree = "<group>";
@@ -140,6 +141,7 @@
 				C82DC3E02C3A9915004CE6C8 /* AddressAutocompleteTextField.swift */,
 				C8F5CF012C397472003E2E40 /* DaDataService.swift */,
 				C8F5CF032C39750F003E2E40 /* SuggestionsListView.swift */,
+				C88CD1DC2C553C05000E9317 /* CityAutocompleteTextField.swift */,
 			);
 			path = DaDataAddress;
 			sourceTree = "<group>";
@@ -147,6 +149,7 @@
 		C88F35672BB44B7E00B177F0 = {
 			isa = PBXGroup;
 			children = (
+				C827D72F2C728411001C4EE5 /* GoogleService-Info.plist */,
 				C88F35722BB44B7E00B177F0 /* Logistic */,
 				C88F35712BB44B7E00B177F0 /* Products */,
 			);
@@ -170,8 +173,8 @@
 				C87D9C422BF65E2A003354F2 /* AlertManager.swift */,
 				C8F5AC6A2C3AF86100420675 /* FirebaseModel.swift */,
 				C87D71752C49450E00BCF2C9 /* ZoomControlsView.swift */,
+				C8BA16A62C73752400DBF4DD /* Validation.swift */,
 				C82DC3E22C3AA1E2004CE6C8 /* DaDataAddress */,
-				C82D59832BB598CE00A83769 /* GoogleService-Info.plist */,
 				C88F35772BB44B8100B177F0 /* Assets.xcassets */,
 				C88F35792BB44B8100B177F0 /* Preview Content */,
 			);
@@ -310,7 +313,7 @@
 			files = (
 				C88F357B2BB44B8100B177F0 /* Preview Assets.xcassets in Resources */,
 				C88F35782BB44B8100B177F0 /* Assets.xcassets in Resources */,
-				C82D59842BB598CE00A83769 /* GoogleService-Info.plist in Resources */,
+				C827D7302C728411001C4EE5 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -341,6 +344,7 @@
 				C82DC3E12C3A9915004CE6C8 /* AddressAutocompleteTextField.swift in Sources */,
 				C87D9C432BF65E2A003354F2 /* AlertManager.swift in Sources */,
 				C88F35B12BB4550900B177F0 /* RegisterView.swift in Sources */,
+				C8BA16A72C73752400DBF4DD /* Validation.swift in Sources */,
 				C8F5AC6B2C3AF86100420675 /* FirebaseModel.swift in Sources */,
 				C87D71762C49450E00BCF2C9 /* ZoomControlsView.swift in Sources */,
 				C88CD1DD2C553C05000E9317 /* CityAutocompleteTextField.swift in Sources */,

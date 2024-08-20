@@ -352,7 +352,6 @@ func formatDate(_ date: Date) -> String {
     return dateFormatter.string(from: date)
 }
 
-
 struct ActiveOrders: View {
     @ObservedObject var alertManager: AlertManager
     @Binding var orders: [OrderItem]
@@ -366,26 +365,21 @@ struct ActiveOrders: View {
     var body: some View {
         NavigationView {
             VStack {
-                // Карта с заказами
-                MapDriverView(orders: $orders, driverLocations: $driverLocations, region: $locationManager.region)
-                    .frame(height: 300) // Высота карты
-                    .padding(.bottom, 10)
-                
                 // Список заказов
                 List {
                     ForEach(orders) { order in
                         OrderRow(order: order,
                                  onSelect: {
-                                    self.selectedOrder = order
-                                    self.showingOrderOnMap = true
+                                     self.selectedOrder = order
+                                     self.showingOrderOnMap = true
                                  },
                                  onActions: {
-                                    self.selectedOrder = order
-                                    self.showingActionSheet = true
+                                     self.selectedOrder = order
+                                     self.showingActionSheet = true
                                  })
                     }
                 }
-                .listStyle(InsetGroupedListStyle()) // Современный стиль списка
+                .listStyle(InsetGroupedListStyle())
                 .onAppear {
                     fetchOrders()
                 }
@@ -419,11 +413,12 @@ struct ActiveOrders: View {
             }
             .sheet(isPresented: $showingOrderOnMap) {
                 if let selectedOrder = selectedOrder {
-                    MapViewWithOrder(order: selectedOrder, region: $locationManager.region)
+                    MapViewWithOrder(order: selectedOrder, isPresented: $showingOrderOnMap, region: $locationManager.region)
                 }
             }
         }
     }
+
 
     func fetchOrders() {
         getDriversOrders(alertManager: alertManager) { fetchedOrders, error in
@@ -485,49 +480,75 @@ struct OrderRow: View {
             Text("Информация о заказе: \(order.orderInfo)")
             Text("Вес груза: \(order.cargoWeight)")
             Text("Крайний срок доставки: \(formatDate(order.deliveryDeadline))")
-            
+
             HStack {
-                Spacer()
                 Button(action: {
                     onSelect()
                 }) {
-                    Text("Выбрать")
-                        .padding()
-                        .background(Color.blue)
+                    Text("Посмотреть на карте")
                         .foregroundColor(.white)
-                        .cornerRadius(10)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.blue)
+                        .cornerRadius(8)
                 }
-                Spacer()
+                .buttonStyle(PlainButtonStyle())
+
                 Button(action: {
                     onActions()
                 }) {
                     Text("Действия")
-                        .padding()
-                        .background(Color.blue)
                         .foregroundColor(.white)
-                        .cornerRadius(10)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.green)
+                        .cornerRadius(8)
                 }
-                Spacer()
+                .buttonStyle(PlainButtonStyle())
             }
         }
         .padding()
-        .background(Color(.systemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 10))
-        .shadow(radius: 5)
+        .background(RoundedRectangle(cornerRadius: 10).stroke(Color.gray, lineWidth: 1))
+        .padding([.top, .horizontal])
     }
 }
 
 struct MapViewWithOrder: View {
     var order: OrderItem
+    @Binding var isPresented: Bool
     @Binding var region: MKCoordinateRegion
 
     var body: some View {
-        Map(coordinateRegion: $region, showsUserLocation: true, annotationItems: [order]) { order in
-            MapPin(coordinate: CLLocationCoordinate2D(latitude: order.senderLatitude, longitude: order.senderLongitude), tint: .blue)
-        }
-        .onAppear {
-            let coordinate = CLLocationCoordinate2D(latitude: order.senderLatitude, longitude: order.senderLongitude)
-            region = MKCoordinateRegion(center: coordinate, span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05))
+        NavigationView {
+            VStack {
+                HStack {
+                    Spacer()
+
+                    Button(action: {
+                        isPresented = false // Закрыть окно карты
+                    }) {
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundColor(.gray)
+                            .imageScale(.large)
+                            .padding()
+                    }
+                }
+
+                VStack(alignment: .leading) {
+                    Text("Откуда: \(order.senderAddress)")
+                        .font(.headline)
+                        .padding(.bottom, 2)
+                    Text("Куда: \(order.recipientAddress)")
+                        .font(.subheadline)
+                        .padding(.bottom, 10)
+                }
+                .padding(.horizontal)
+                .font(.system(size: 16)) // Единый стиль шрифта
+
+                MapViewWithRoute(order: order, region: $region)
+                    .edgesIgnoringSafeArea(.bottom) // Занимает всё доступное пространство
+            }
+            .navigationBarHidden(true) // Скрывает верхнюю панель навигации
         }
     }
 }
@@ -609,6 +630,7 @@ func getDriversOrders(alertManager: AlertManager, completion: @escaping ([OrderI
             }
     }
 }
+
 struct ChatDriverView: View {
     @State private var existingChats: [ChatInfo] = []
     @State private var selectedChat: ChatInfo?
@@ -756,9 +778,8 @@ struct ChatDriverView: View {
 
 //Map
 
-struct MapDriverView: UIViewRepresentable {
-    @Binding var orders: [OrderItem]
-    @Binding var driverLocations: [DriverLocation]
+struct MapViewWithRoute: UIViewRepresentable {
+    var order: OrderItem
     @Binding var region: MKCoordinateRegion
 
     func makeUIView(context: Context) -> MKMapView {
@@ -769,48 +790,34 @@ struct MapDriverView: UIViewRepresentable {
     }
 
     func updateUIView(_ mapView: MKMapView, context: Context) {
+        // Удалить все предыдущие аннотации и оверлеи
         mapView.removeAnnotations(mapView.annotations)
         mapView.removeOverlays(mapView.overlays)
 
-        // Добавление заказов в качестве аннотаций на карте
-        let orderAnnotations = orders.flatMap { order -> [MKPointAnnotation] in
-            var annotations: [MKPointAnnotation] = []
-            
-            let senderAnnotation = MKPointAnnotation()
-            senderAnnotation.title = "Отправление"
-            senderAnnotation.subtitle = "\(order.senderAddress)"
-            senderAnnotation.coordinate = CLLocationCoordinate2D(latitude: order.senderLatitude, longitude: order.senderLongitude)
-            annotations.append(senderAnnotation)
-            
-            let recipientAnnotation = MKPointAnnotation()
-            recipientAnnotation.title = "Получение"
-            recipientAnnotation.subtitle = "\(order.recipientAddress)"
-            recipientAnnotation.coordinate = CLLocationCoordinate2D(latitude: order.recipientLatitude, longitude: order.recipientLongitude)
-            annotations.append(recipientAnnotation)
-            
-            return annotations
-        }
-        mapView.addAnnotations(orderAnnotations)
+        // Создать аннотации для отправителя и получателя
+        let senderAnnotation = MKPointAnnotation()
+        senderAnnotation.title = "Откуда"
+        senderAnnotation.coordinate = CLLocationCoordinate2D(latitude: order.senderLatitude, longitude: order.senderLongitude)
 
-        // Устанавливаем регион, чтобы охватить все аннотации
-        if !orderAnnotations.isEmpty {
-            var minLat = orderAnnotations.map { $0.coordinate.latitude }.min()!
-            var maxLat = orderAnnotations.map { $0.coordinate.latitude }.max()!
-            var minLon = orderAnnotations.map { $0.coordinate.longitude }.min()!
-            var maxLon = orderAnnotations.map { $0.coordinate.longitude }.max()!
+        let recipientAnnotation = MKPointAnnotation()
+        recipientAnnotation.title = "Куда"
+        recipientAnnotation.coordinate = CLLocationCoordinate2D(latitude: order.recipientLatitude, longitude: order.recipientLongitude)
 
-            let span = MKCoordinateSpan(latitudeDelta: (maxLat - minLat) * 1.5, longitudeDelta: (maxLon - minLon) * 1.5)
-            let center = CLLocationCoordinate2D(latitude: (minLat + maxLat) / 2, longitude: (minLon + maxLon) / 2)
-            let region = MKCoordinateRegion(center: center, span: span)
-            mapView.setRegion(region, animated: true)
-        }
+        // Добавить аннотации на карту
+        mapView.addAnnotations([senderAnnotation, recipientAnnotation])
 
-        // Рисуем маршруты между отправлением и получением
-        for order in orders {
-            let sourceLocation = CLLocationCoordinate2D(latitude: order.senderLatitude, longitude: order.senderLongitude)
-            let destinationLocation = CLLocationCoordinate2D(latitude: order.recipientLatitude, longitude: order.recipientLongitude)
+        // Прорисовать маршрут между точками
+        let request = MKDirections.Request()
+        request.source = MKMapItem(placemark: MKPlacemark(coordinate: senderAnnotation.coordinate))
+        request.destination = MKMapItem(placemark: MKPlacemark(coordinate: recipientAnnotation.coordinate))
+        request.transportType = .automobile
 
-            context.coordinator.drawRoute(from: sourceLocation, to: destinationLocation, on: mapView)
+        let directions = MKDirections(request: request)
+        directions.calculate { response, error in
+            if let route = response?.routes.first {
+                mapView.addOverlay(route.polyline)
+                mapView.setVisibleMapRect(route.polyline.boundingMapRect, edgePadding: UIEdgeInsets(top: 100, left: 50, bottom: 50, right: 50), animated: true)
+            }
         }
     }
 
@@ -819,59 +826,23 @@ struct MapDriverView: UIViewRepresentable {
     }
 
     class Coordinator: NSObject, MKMapViewDelegate {
-        var parent: MapDriverView
+        var parent: MapViewWithRoute
 
-        init(_ parent: MapDriverView) {
+        init(_ parent: MapViewWithRoute) {
             self.parent = parent
-        }
-
-        func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-            let identifier = "OrderAnnotation"
-            var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKPinAnnotationView
-
-            if annotationView == nil {
-                annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
-                annotationView?.canShowCallout = true
-            } else {
-                annotationView?.annotation = annotation
-            }
-
-            return annotationView
-        }
-
-        func drawRoute(from source: CLLocationCoordinate2D, to destination: CLLocationCoordinate2D, on mapView: MKMapView) {
-            let sourcePlacemark = MKPlacemark(coordinate: source)
-            let destinationPlacemark = MKPlacemark(coordinate: destination)
-
-            let directionRequest = MKDirections.Request()
-            directionRequest.source = MKMapItem(placemark: sourcePlacemark)
-            directionRequest.destination = MKMapItem(placemark: destinationPlacemark)
-            directionRequest.transportType = .automobile
-
-            let directions = MKDirections(request: directionRequest)
-            directions.calculate { response, error in
-                guard let response = response, error == nil else {
-                    print("Error calculating directions: \(String(describing: error))")
-                    return
-                }
-
-                let route = response.routes.first!
-                mapView.addOverlay(route.polyline, level: .aboveRoads)
-            }
         }
 
         func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
             if let polyline = overlay as? MKPolyline {
                 let renderer = MKPolylineRenderer(polyline: polyline)
                 renderer.strokeColor = .blue
-                renderer.lineWidth = 4.0
+                renderer.lineWidth = 5
                 return renderer
             }
             return MKOverlayRenderer(overlay: overlay)
         }
     }
 }
-
 
 //запись в бд геолокации
 class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
