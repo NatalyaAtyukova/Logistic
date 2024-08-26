@@ -20,35 +20,77 @@ struct UserProfileView: View {
     let role: String
 
     var body: some View {
-        VStack(spacing: 20) {
-            Text("Профиль")
-                .font(.largeTitle)
-                .padding(.bottom, 20)
+        VStack {
+            ScrollView {
+                VStack(spacing: 20) {
+                    Text("Профиль")
+                        .font(.largeTitle)
+                        .padding(.bottom, 20)
 
-            if isEditing {
-                profileEditingView
-            } else {
-                profileViewingView
-            }
+                    if isEditing {
+                        profileEditingView
+                    } else {
+                        profileViewingView
+                    }
 
-            Button(action: {
-                isEditing.toggle()
-                if isEditing {
-                    loadUserProfile()
+                    if let errorMessage = errorMessage {
+                        Text(errorMessage)
+                            .foregroundColor(.red)
+                            .padding()
+                    }
+
+                    if let successMessage = successMessage {
+                        Text(successMessage)
+                            .foregroundColor(.green)
+                            .padding()
+                    }
                 }
-            }) {
-                Text(isEditing ? "Отмена" : "Редактировать")
-                    .padding()
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-                    .font(.headline)
+                .padding(.horizontal)
             }
-            .padding(.horizontal)
 
-            Spacer()
+            // Buttons are fixed at the bottom
+            VStack {
+                if isEditing {
+                    HStack {
+                        Button(action: {
+                            isEditing.toggle()
+                        }) {
+                            Text("Отмена")
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .background(Color.gray)
+                                .foregroundColor(.white)
+                                .cornerRadius(10)
+                        }
+
+                        Button(action: {
+                            saveProfileChanges()
+                        }) {
+                            Text("Сохранить")
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .background(Color.blue)
+                                .foregroundColor(.white)
+                                .cornerRadius(10)
+                        }
+                    }
+                    .padding()
+                } else {
+                    Button(action: {
+                        isEditing.toggle()
+                    }) {
+                        Text(isEditing ? "Отмена" : "Редактировать")
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                            .font(.headline)
+                    }
+                    .padding()
+                }
+            }
         }
-        .padding()
         .onAppear {
             loadUserProfile()
         }
@@ -136,30 +178,6 @@ struct UserProfileView: View {
                     validateFields()
                 }
             )
-
-            if let errorMessage = errorMessage {
-                Text(errorMessage)
-                    .foregroundColor(.red)
-                    .padding()
-            }
-
-            if let successMessage = successMessage {
-                Text(successMessage)
-                    .foregroundColor(.green)
-                    .padding()
-            }
-
-            Button(action: {
-                saveProfileChanges()
-            }) {
-                Text("Сохранить изменения")
-                    .padding()
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-                    .font(.headline)
-            }
-            .padding(.horizontal)
         }
     }
 
@@ -295,6 +313,7 @@ struct UserProfileView: View {
         }
     }
 }
+
 
 struct CustomTextField: View {
     let title: String

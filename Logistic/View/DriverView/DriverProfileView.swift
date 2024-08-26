@@ -19,40 +19,34 @@ struct DriverProfileView: View {
     @State private var licenseError: String? = nil
     @State private var phoneError: String? = nil
 
-    // Ограничение ввода по символам
+    // Ограничение на количество символов
     private let maxPhoneNumberLength = 12  // +7 и 10 цифр
     private let maxLicenseNumberLength = 10 // Водительское удостоверение - 10 символов
 
-    // Валидация полей
+    // Валидация полей с использованием Validation
     func validateFields() -> Bool {
+        // Очищаем предыдущие ошибки
         firstNameError = nil
         lastNameError = nil
         licenseError = nil
         phoneError = nil
         
-        var isValid = true
-
-        if !Validation.isValidName(firstName) {
-            firstNameError = "Имя должно содержать только русские буквы"
-            isValid = false
-        }
-
-        if !Validation.isValidName(lastName) {
-            lastNameError = "Фамилия должна содержать только русские буквы"
-            isValid = false
-        }
-
-        if !Validation.isNotEmpty(licenseNumber) || licenseNumber.count != maxLicenseNumberLength {
-            licenseError = "Номер водительского удостоверения должен содержать 10 символов"
-            isValid = false
-        }
-
-        if !Validation.isValidPhoneNumber(phoneNumber) || phoneNumber.count != maxPhoneNumberLength {
-            phoneError = "Номер телефона должен содержать 12 символов и начинаться с +7"
-            isValid = false
-        }
-
-        return isValid
+        // Вызываем валидацию и получаем ошибки
+        let validationResult = Validation.validateDriverProfile(
+            firstName: firstName,
+            lastName: lastName,
+            licenseNumber: licenseNumber,
+            phoneNumber: phoneNumber
+        )
+        
+        // Обновляем ошибки, если они есть
+        firstNameError = validationResult["firstName"]
+        lastNameError = validationResult["lastName"]
+        licenseError = validationResult["licenseNumber"]
+        phoneError = validationResult["phoneNumber"]
+        
+        // Если ошибок нет, возвращаем true
+        return validationResult.isEmpty
     }
     
     var body: some View {
