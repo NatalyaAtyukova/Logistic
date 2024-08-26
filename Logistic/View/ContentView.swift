@@ -1,9 +1,3 @@
-//
-//  ContentView.swift
-//  Logistic
-//
-//  Created by Наталья Атюкова on 27.03.2024.
-//
 import SwiftUI
 import Firebase
 
@@ -14,6 +8,7 @@ struct ContentView: View {
     @State private var userRole: String = ""
     @State private var selectedRole: String = ""
     @State private var selectedView: AnyView? // Добавляем свойство для хранения выбранного представления
+    @State private var showResetPassword = false // Для управления показом экрана сброса пароля
     
     var body: some View {
         NavigationView {
@@ -40,6 +35,7 @@ struct ContentView: View {
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .padding(.horizontal)
                     
+                    // Кнопка для входа
                     Button(action: {
                         signIn()
                     }) {
@@ -53,12 +49,28 @@ struct ContentView: View {
                     }
                     .padding(.horizontal)
                     
+                    // Кнопка для регистрации
                     NavigationLink(destination: RegisterView(selectedRole: $selectedRole)) {
                         Text("Регистрация")
                             .font(.headline)
                             .foregroundColor(.blue)
                     }
                     .padding(.top, 10)
+                    
+                    // Кнопка для сброса пароля
+                    Button(action: {
+                        showResetPassword = true
+                    }) {
+                        Text("Забыли пароль?")
+                            .font(.headline)
+                            .foregroundColor(.blue)
+                            .padding(.top, 5)
+                    }
+                    
+                    // Переход на экран сброса пароля
+                    NavigationLink(destination: ResetPasswordView(), isActive: $showResetPassword) {
+                        EmptyView()
+                    }
                 }
                 .padding()
             }
@@ -90,7 +102,7 @@ struct ContentView: View {
                         // Устанавливаем выбранное представление в AdminTabView
                         DispatchQueue.main.async {
                             self.isLogged = true
-                            self.selectedView = AnyView(AdminTabView())
+                            self.selectedView = AnyView(AdminTabView(userID: userId))
                             print("Переход на интерфейс")
                         }
                     } else {
@@ -102,7 +114,7 @@ struct ContentView: View {
                                 // Устанавливаем выбранное представление в DriverTabView
                                 DispatchQueue.main.async {
                                     self.isLogged = true
-                                    self.selectedView = AnyView(DriverTabView())
+                                    self.selectedView = AnyView(DriverTabView(userID: userId))
                                     print("Переход на интерфейс")
                                 }
                             } else {
@@ -115,11 +127,3 @@ struct ContentView: View {
         }
     }
 }
-
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-    }
-}
-

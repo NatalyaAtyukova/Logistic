@@ -15,7 +15,9 @@ struct AdminTabView: View {
         span: MKCoordinateSpan(latitudeDelta: 5.0, longitudeDelta: 5.0)
     )
     @State private var isInitialRegionSet: Bool = false
-
+    
+    let userID: String
+    
     var body: some View {
         TabView {
             NavigationView {
@@ -30,12 +32,6 @@ struct AdminTabView: View {
                 .tabItem {
                     Image(systemName: "plus")
                     Text("Добавить заказ")
-                }
-
-            ChatAdminView()
-                .tabItem {
-                    Image(systemName: "message")
-                    Text("Чат")
                 }
 
             if let order = currentOrder {
@@ -62,6 +58,7 @@ struct AdminTabView: View {
                 .onAppear {
                     centerMapOnOrder(order)
                 }
+                
             } else {
                 Text("Выберите заказ для отображения на карте")
                     .tabItem {
@@ -69,6 +66,16 @@ struct AdminTabView: View {
                         Text("Карта")
                     }
             }
+            ChatAdminView()
+                .tabItem {
+                    Image(systemName: "message")
+                    Text("Чат")
+                }
+            
+            UserProfileView(userID: userID, role: "admin") // Добавляем профиль
+                .tabItem {
+                    Label("Профиль", systemImage: "person.circle")
+                }
         }
         .navigationBarTitle("Панель организации")
         .onAppear {

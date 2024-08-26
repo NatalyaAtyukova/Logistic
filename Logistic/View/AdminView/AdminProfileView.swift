@@ -23,36 +23,30 @@ struct AdminProfileView: View {
     private let maxPhoneNumberLength = 12  // +7 и 10 цифр
     private let maxINNLength = 10  // ИНН должен быть из 10 символов
 
-    // Валидация полей
+    // Валидация полей с использованием Validation
     func validateFields() -> Bool {
+        // Очищаем предыдущие ошибки
         nameError = nil
         addressError = nil
         innError = nil
         phoneError = nil
         
-        var isValid = true
-
-        if !Validation.isNotEmpty(nameOrganisation) {
-            nameError = "Введите наименование организации"
-            isValid = false
-        }
+        // Вызываем валидацию и получаем ошибки
+        let validationResult = Validation.validateAdminProfile(
+            nameOrganisation: nameOrganisation,
+            addressOrganisation: addressOrganisation,
+            innOrganisation: innOrganisation,
+            phoneNumber: phoneNumber
+        )
         
-        if !Validation.isValidINN(innOrganisation) || innOrganisation.count != maxINNLength {
-            innError = "ИНН должен содержать 10 цифр"
-            isValid = false
-        }
-
-        if !Validation.isNotEmpty(addressOrganisation) {
-            addressError = "Введите адрес организации"
-            isValid = false
-        }
-
-        if !Validation.isValidPhoneNumber(phoneNumber) || phoneNumber.count != maxPhoneNumberLength {
-            phoneError = "Номер телефона должен содержать 12 символов и начинаться с +7"
-            isValid = false
-        }
-
-        return isValid
+        // Обновляем ошибки, если они есть
+        nameError = validationResult["nameOrganisation"]
+        addressError = validationResult["addressOrganisation"]
+        innError = validationResult["innOrganisation"]
+        phoneError = validationResult["phoneNumber"]
+        
+        // Если ошибок нет, возвращаем true
+        return validationResult.isEmpty
     }
     
     var body: some View {
@@ -129,10 +123,14 @@ struct AdminProfileView: View {
                 }
             }) {
                 Text("Сохранить профиль")
+                    .padding()
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
             }
             .padding()
             
-            NavigationLink(destination: AdminTabView(), isActive: $navigateToAdminTab) {
+            NavigationLink(destination: AdminTabView(userID: userID), isActive: $navigateToAdminTab) {
                 EmptyView()
             }
         }
@@ -148,7 +146,7 @@ struct AdminProfileView: View {
             "nameOrganisation": nameOrganisation,
             "innOrganisation": innOrganisation,
             "addressOrganisation": addressOrganisation,
-            "phoneNumber": phoneNumber,
+            "phoneNumber": Validation.formatPhoneNumber(phoneNumber),
             "role": "admin"
         ]
         

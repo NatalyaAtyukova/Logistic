@@ -12,6 +12,8 @@ struct DriverTabView: View {
     @StateObject private var locationManager = LocationManager()
     @State private var orders: [OrderItem] = []
     @State private var driverLocations: [DriverLocation] = []
+    
+    let userID: String
 
     var body: some View {
         TabView {
@@ -29,6 +31,11 @@ struct DriverTabView: View {
                 .tabItem {
                     Image(systemName: "message")
                     Text("Чат")
+                }
+            
+            UserProfileView(userID: userID, role: "driver") // Добавляем профиль
+                .tabItem {
+                    Label("Профиль", systemImage: "person.circle")
                 }
         }
         .navigationBarTitle("Панель водителя")
@@ -67,9 +74,7 @@ struct DriverTabView: View {
         }
     }
 }
-import SwiftUI
-import FirebaseFirestore
-import FirebaseAuth
+
 
 struct FindOrderView: View {
     @State private var senderCity: String = ""
@@ -786,6 +791,10 @@ struct MapViewWithRoute: UIViewRepresentable {
         let mapView = MKMapView()
         mapView.delegate = context.coordinator
         mapView.showsUserLocation = true
+        
+        // Включаем отображение пробок
+        mapView.showsTraffic = true
+        
         return mapView
     }
 
@@ -844,6 +853,7 @@ struct MapViewWithRoute: UIViewRepresentable {
     }
 }
 
+
 //запись в бд геолокации
 class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private let manager = CLLocationManager()
@@ -897,13 +907,6 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
 
 
 
-
-//
-//struct DriverTabView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        DriverTabView()
-//    }
-//}
 
 
 

@@ -132,7 +132,7 @@ struct DriverProfileView: View {
             }
             .padding()
             
-            NavigationLink(destination: DriverTabView(), isActive: $navigateToDriverTab) {
+            NavigationLink(destination: DriverTabView(userID: userID), isActive: $navigateToDriverTab) {
                 EmptyView()
             }
         }

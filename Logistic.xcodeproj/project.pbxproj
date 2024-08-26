@@ -28,6 +28,8 @@
 		C88F35B32BB45A5200B177F0 /* DriverProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C88F35B22BB45A5200B177F0 /* DriverProfileView.swift */; };
 		C8A4A8382BC04CC600164865 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8A4A8372BC04CC600164865 /* ChatView.swift */; };
 		C8BA16A72C73752400DBF4DD /* Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BA16A62C73752400DBF4DD /* Validation.swift */; };
+		C8EAF8D52C755780008659F5 /* ResetPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8EAF8D42C755780008659F5 /* ResetPasswordView.swift */; };
+		C8EAF8D72C755DCF008659F5 /* UserProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8EAF8D62C755DCF008659F5 /* UserProfileView.swift */; };
 		C8F5AC6B2C3AF86100420675 /* FirebaseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8F5AC6A2C3AF86100420675 /* FirebaseModel.swift */; };
 		C8F5CF022C397472003E2E40 /* DaDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8F5CF012C397472003E2E40 /* DaDataService.swift */; };
 		C8F5CF042C39750F003E2E40 /* SuggestionsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8F5CF032C39750F003E2E40 /* SuggestionsListView.swift */; };
@@ -70,6 +72,8 @@
 		C88F35B22BB45A5200B177F0 /* DriverProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriverProfileView.swift; sourceTree = "<group>"; };
 		C8A4A8372BC04CC600164865 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		C8BA16A62C73752400DBF4DD /* Validation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validation.swift; sourceTree = "<group>"; };
+		C8EAF8D42C755780008659F5 /* ResetPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordView.swift; sourceTree = "<group>"; };
+		C8EAF8D62C755DCF008659F5 /* UserProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileView.swift; sourceTree = "<group>"; };
 		C8F5AC6A2C3AF86100420675 /* FirebaseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseModel.swift; sourceTree = "<group>"; };
 		C8F5CF012C397472003E2E40 /* DaDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaDataService.swift; sourceTree = "<group>"; };
 		C8F5CF032C39750F003E2E40 /* SuggestionsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionsListView.swift; sourceTree = "<group>"; };
@@ -113,6 +117,8 @@
 				C803D8462BB4A17000086411 /* DriverView */,
 				C88F35752BB44B7E00B177F0 /* ContentView.swift */,
 				C88F35B02BB4550900B177F0 /* RegisterView.swift */,
+				C8EAF8D42C755780008659F5 /* ResetPasswordView.swift */,
+				C8EAF8D62C755DCF008659F5 /* UserProfileView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -339,6 +345,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C88F35B32BB45A5200B177F0 /* DriverProfileView.swift in Sources */,
+				C8EAF8D72C755DCF008659F5 /* UserProfileView.swift in Sources */,
 				C803D8482BB4A86E00086411 /* AdminProfileView.swift in Sources */,
 				C8F5CF042C39750F003E2E40 /* SuggestionsListView.swift in Sources */,
 				C82DC3E12C3A9915004CE6C8 /* AddressAutocompleteTextField.swift in Sources */,
@@ -354,6 +361,7 @@
 				C88F35762BB44B7E00B177F0 /* ContentView.swift in Sources */,
 				C88F35742BB44B7E00B177F0 /* LogisticApp.swift in Sources */,
 				C803D84C2BB4B2A100086411 /* AdminTabView.swift in Sources */,
+				C8EAF8D52C755780008659F5 /* ResetPasswordView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
