@@ -28,6 +28,20 @@
 		C88F35B32BB45A5200B177F0 /* DriverProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C88F35B22BB45A5200B177F0 /* DriverProfileView.swift */; };
 		C8A4A8382BC04CC600164865 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8A4A8372BC04CC600164865 /* ChatView.swift */; };
 		C8BA16A72C73752400DBF4DD /* Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BA16A62C73752400DBF4DD /* Validation.swift */; };
+		C8BA559D2C7D1595009C152A /* OrdersListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BA559C2C7D1595009C152A /* OrdersListView.swift */; };
+		C8BA559F2C7D1780009C152A /* AddOrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BA559E2C7D1780009C152A /* AddOrderView.swift */; };
+		C8BA55A12C7D17DC009C152A /* EditOrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BA55A02C7D17DC009C152A /* EditOrderView.swift */; };
+		C8BA55A32C7D1804009C152A /* ChatAdminView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BA55A22C7D1804009C152A /* ChatAdminView.swift */; };
+		C8BA55A52C7D1832009C152A /* MapAdminView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BA55A42C7D1832009C152A /* MapAdminView.swift */; };
+		C8BA55A82C7D1A06009C152A /* FindOrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BA55A72C7D1A06009C152A /* FindOrderView.swift */; };
+		C8BA55AA2C7D1A37009C152A /* FindListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BA55A92C7D1A36009C152A /* FindListView.swift */; };
+		C8BA55AE2C7D1A62009C152A /* ActiveOrders.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BA55AD2C7D1A62009C152A /* ActiveOrders.swift */; };
+		C8BA55B02C7D1A99009C152A /* OrderRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BA55AF2C7D1A99009C152A /* OrderRow.swift */; };
+		C8BA55B22C7D1ABF009C152A /* MapViewWithOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BA55B12C7D1ABF009C152A /* MapViewWithOrder.swift */; };
+		C8BA55B42C7D1ADB009C152A /* ChatDriverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BA55B32C7D1ADB009C152A /* ChatDriverView.swift */; };
+		C8BA55B62C7D1AF7009C152A /* MapViewWithRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BA55B52C7D1AF7009C152A /* MapViewWithRoute.swift */; };
+		C8BA55B82C7E6E3C009C152A /* ChatCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BA55B72C7E6E3C009C152A /* ChatCard.swift */; };
+		C8BA55BA2C7E6EE8009C152A /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BA55B92C7E6EE8009C152A /* MessageView.swift */; };
 		C8EAF8D52C755780008659F5 /* ResetPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8EAF8D42C755780008659F5 /* ResetPasswordView.swift */; };
 		C8EAF8D72C755DCF008659F5 /* UserProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8EAF8D62C755DCF008659F5 /* UserProfileView.swift */; };
 		C8F5AC6B2C3AF86100420675 /* FirebaseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8F5AC6A2C3AF86100420675 /* FirebaseModel.swift */; };
@@ -72,6 +86,20 @@
 		C88F35B22BB45A5200B177F0 /* DriverProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriverProfileView.swift; sourceTree = "<group>"; };
 		C8A4A8372BC04CC600164865 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		C8BA16A62C73752400DBF4DD /* Validation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validation.swift; sourceTree = "<group>"; };
+		C8BA559C2C7D1595009C152A /* OrdersListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrdersListView.swift; sourceTree = "<group>"; };
+		C8BA559E2C7D1780009C152A /* AddOrderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddOrderView.swift; sourceTree = "<group>"; };
+		C8BA55A02C7D17DC009C152A /* EditOrderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditOrderView.swift; sourceTree = "<group>"; };
+		C8BA55A22C7D1804009C152A /* ChatAdminView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatAdminView.swift; sourceTree = "<group>"; };
+		C8BA55A42C7D1832009C152A /* MapAdminView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapAdminView.swift; sourceTree = "<group>"; };
+		C8BA55A72C7D1A06009C152A /* FindOrderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindOrderView.swift; sourceTree = "<group>"; };
+		C8BA55A92C7D1A36009C152A /* FindListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindListView.swift; sourceTree = "<group>"; };
+		C8BA55AD2C7D1A62009C152A /* ActiveOrders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveOrders.swift; sourceTree = "<group>"; };
+		C8BA55AF2C7D1A99009C152A /* OrderRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderRow.swift; sourceTree = "<group>"; };
+		C8BA55B12C7D1ABF009C152A /* MapViewWithOrder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewWithOrder.swift; sourceTree = "<group>"; };
+		C8BA55B32C7D1ADB009C152A /* ChatDriverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatDriverView.swift; sourceTree = "<group>"; };
+		C8BA55B52C7D1AF7009C152A /* MapViewWithRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewWithRoute.swift; sourceTree = "<group>"; };
+		C8BA55B72C7E6E3C009C152A /* ChatCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCard.swift; sourceTree = "<group>"; };
+		C8BA55B92C7E6EE8009C152A /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
 		C8EAF8D42C755780008659F5 /* ResetPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordView.swift; sourceTree = "<group>"; };
 		C8EAF8D62C755DCF008659F5 /* UserProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileView.swift; sourceTree = "<group>"; };
 		C8F5AC6A2C3AF86100420675 /* FirebaseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseModel.swift; sourceTree = "<group>"; };
@@ -112,13 +140,10 @@
 		C803D8442BB49FA500086411 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				C8BA55A62C7D187C009C152A /* Registration */,
 				C8A4A83B2BC04DF900164865 /* Chat&MessageView */,
 				C803D8452BB4A15900086411 /* AdminView */,
 				C803D8462BB4A17000086411 /* DriverView */,
-				C88F35752BB44B7E00B177F0 /* ContentView.swift */,
-				C88F35B02BB4550900B177F0 /* RegisterView.swift */,
-				C8EAF8D42C755780008659F5 /* ResetPasswordView.swift */,
-				C8EAF8D62C755DCF008659F5 /* UserProfileView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -126,8 +151,12 @@
 		C803D8452BB4A15900086411 /* AdminView */ = {
 			isa = PBXGroup;
 			children = (
-				C803D8472BB4A86E00086411 /* AdminProfileView.swift */,
 				C803D84B2BB4B2A100086411 /* AdminTabView.swift */,
+				C8BA559E2C7D1780009C152A /* AddOrderView.swift */,
+				C8BA55A22C7D1804009C152A /* ChatAdminView.swift */,
+				C8BA55A02C7D17DC009C152A /* EditOrderView.swift */,
+				C8BA55A42C7D1832009C152A /* MapAdminView.swift */,
+				C8BA559C2C7D1595009C152A /* OrdersListView.swift */,
 			);
 			path = AdminView;
 			sourceTree = "<group>";
@@ -135,8 +164,14 @@
 		C803D8462BB4A17000086411 /* DriverView */ = {
 			isa = PBXGroup;
 			children = (
-				C88F35B22BB45A5200B177F0 /* DriverProfileView.swift */,
 				C803D8552BB4B5BC00086411 /* DriverTabView.swift */,
+				C8BA55AD2C7D1A62009C152A /* ActiveOrders.swift */,
+				C8BA55B32C7D1ADB009C152A /* ChatDriverView.swift */,
+				C8BA55A72C7D1A06009C152A /* FindOrderView.swift */,
+				C8BA55A92C7D1A36009C152A /* FindListView.swift */,
+				C8BA55B12C7D1ABF009C152A /* MapViewWithOrder.swift */,
+				C8BA55B52C7D1AF7009C152A /* MapViewWithRoute.swift */,
+				C8BA55AF2C7D1A99009C152A /* OrderRow.swift */,
 			);
 			path = DriverView;
 			sourceTree = "<group>";
@@ -176,6 +211,7 @@
 			children = (
 				C803D8442BB49FA500086411 /* View */,
 				C88F35732BB44B7E00B177F0 /* LogisticApp.swift */,
+				C8EAF8D62C755DCF008659F5 /* UserProfileView.swift */,
 				C87D9C422BF65E2A003354F2 /* AlertManager.swift */,
 				C8F5AC6A2C3AF86100420675 /* FirebaseModel.swift */,
 				C87D71752C49450E00BCF2C9 /* ZoomControlsView.swift */,
@@ -198,9 +234,23 @@
 		C8A4A83B2BC04DF900164865 /* Chat&MessageView */ = {
 			isa = PBXGroup;
 			children = (
+				C8BA55B72C7E6E3C009C152A /* ChatCard.swift */,
 				C8A4A8372BC04CC600164865 /* ChatView.swift */,
+				C8BA55B92C7E6EE8009C152A /* MessageView.swift */,
 			);
 			path = "Chat&MessageView";
+			sourceTree = "<group>";
+		};
+		C8BA55A62C7D187C009C152A /* Registration */ = {
+			isa = PBXGroup;
+			children = (
+				C88F35752BB44B7E00B177F0 /* ContentView.swift */,
+				C88F35B02BB4550900B177F0 /* RegisterView.swift */,
+				C8EAF8D42C755780008659F5 /* ResetPasswordView.swift */,
+				C803D8472BB4A86E00086411 /* AdminProfileView.swift */,
+				C88F35B22BB45A5200B177F0 /* DriverProfileView.swift */,
+			);
+			path = Registration;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -348,17 +398,31 @@
 				C8EAF8D72C755DCF008659F5 /* UserProfileView.swift in Sources */,
 				C803D8482BB4A86E00086411 /* AdminProfileView.swift in Sources */,
 				C8F5CF042C39750F003E2E40 /* SuggestionsListView.swift in Sources */,
+				C8BA55B82C7E6E3C009C152A /* ChatCard.swift in Sources */,
 				C82DC3E12C3A9915004CE6C8 /* AddressAutocompleteTextField.swift in Sources */,
 				C87D9C432BF65E2A003354F2 /* AlertManager.swift in Sources */,
+				C8BA55B22C7D1ABF009C152A /* MapViewWithOrder.swift in Sources */,
+				C8BA55B02C7D1A99009C152A /* OrderRow.swift in Sources */,
 				C88F35B12BB4550900B177F0 /* RegisterView.swift in Sources */,
 				C8BA16A72C73752400DBF4DD /* Validation.swift in Sources */,
 				C8F5AC6B2C3AF86100420675 /* FirebaseModel.swift in Sources */,
+				C8BA55BA2C7E6EE8009C152A /* MessageView.swift in Sources */,
+				C8BA559F2C7D1780009C152A /* AddOrderView.swift in Sources */,
 				C87D71762C49450E00BCF2C9 /* ZoomControlsView.swift in Sources */,
+				C8BA55B62C7D1AF7009C152A /* MapViewWithRoute.swift in Sources */,
 				C88CD1DD2C553C05000E9317 /* CityAutocompleteTextField.swift in Sources */,
+				C8BA55A12C7D17DC009C152A /* EditOrderView.swift in Sources */,
+				C8BA55B42C7D1ADB009C152A /* ChatDriverView.swift in Sources */,
+				C8BA55A52C7D1832009C152A /* MapAdminView.swift in Sources */,
+				C8BA55AA2C7D1A37009C152A /* FindListView.swift in Sources */,
+				C8BA55A82C7D1A06009C152A /* FindOrderView.swift in Sources */,
+				C8BA55AE2C7D1A62009C152A /* ActiveOrders.swift in Sources */,
 				C803D8562BB4B5BC00086411 /* DriverTabView.swift in Sources */,
 				C8F5CF022C397472003E2E40 /* DaDataService.swift in Sources */,
 				C8A4A8382BC04CC600164865 /* ChatView.swift in Sources */,
 				C88F35762BB44B7E00B177F0 /* ContentView.swift in Sources */,
+				C8BA559D2C7D1595009C152A /* OrdersListView.swift in Sources */,
+				C8BA55A32C7D1804009C152A /* ChatAdminView.swift in Sources */,
 				C88F35742BB44B7E00B177F0 /* LogisticApp.swift in Sources */,
 				C803D84C2BB4B2A100086411 /* AdminTabView.swift in Sources */,
 				C8EAF8D52C755780008659F5 /* ResetPasswordView.swift in Sources */,

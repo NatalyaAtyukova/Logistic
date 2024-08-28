@@ -8,46 +8,69 @@ struct ChatView: View {
     @State private var messages: [Message] = []
     let db = Firestore.firestore()
     @Environment(\.presentationMode) var presentationMode
+    @State private var textEditorHeight: CGFloat = 80 // Увеличенная начальная высота для TextEditor
     
     var body: some View {
         VStack {
+            // Header
             HStack {
                 Button(action: {
                     self.presentationMode.wrappedValue.dismiss()
                 }) {
                     Image(systemName: "chevron.left")
                         .foregroundColor(.blue)
+                        .font(.title2)
                 }
                 .padding(.leading)
                 
-                VStack(alignment: .leading) {
+                VStack(alignment: .leading, spacing: 4) {
                     Text("Chat for Order ID: \(chatInfo.orderId)")
                         .font(.headline)
+                        .fontWeight(.bold)
                     Text("Recipient Address: \(chatInfo.recipientAddress)")
                         .font(.subheadline)
+                        .foregroundColor(.gray)
                     Text("Sender Address: \(chatInfo.senderAddress)")
                         .font(.subheadline)
+                        .foregroundColor(.gray)
                 }
                 .padding()
                 
                 Spacer()
             }
+            .background(Color(UIColor.systemBackground))
             
+            // Messages List
             ScrollView {
                 VStack(alignment: .leading, spacing: 10) {
                     ForEach(messages) { message in
                         MessageView(message: message)
                             .frame(maxWidth: .infinity, alignment: message.senderId == Auth.auth().currentUser?.uid ? .trailing : .leading)
+                            .padding(.horizontal)
                     }
                 }
+                .padding(.bottom, textEditorHeight + 20) // Make room for the message input field
             }
-            .padding(.horizontal)
             
-            HStack {
-                TextField("Enter message", text: $messageText)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding(.horizontal)
-                    .frame(minHeight: 45)
+            // Input Field
+            HStack(alignment: .bottom) {
+                TextEditor(text: $messageText)
+                    .padding(12)
+                    .background(Color(UIColor.secondarySystemBackground))
+                    .cornerRadius(8) // Сделаем обводку менее выраженной
+                    .frame(minHeight: textEditorHeight, maxHeight: textEditorHeight) // Высота TextEditor
+                    .fixedSize(horizontal: false, vertical: true) // Allow height to expand
+                    .background(
+                        GeometryReader { geo in
+                            Color.clear
+                                .onChange(of: geo.size.height) { newHeight in
+                                    // Обновляем высоту TextEditor только если она увеличивается
+                                    if newHeight > textEditorHeight {
+                                        textEditorHeight = newHeight
+                                    }
+                                }
+                        }
+                    )
                 
                 Button(action: {
                     sendMessage(messageText: self.messageText, chatId: chatInfo.id)
@@ -56,11 +79,12 @@ struct ChatView: View {
                         .foregroundColor(.white)
                         .padding()
                         .background(Color.blue)
-                        .cornerRadius(8)
+                        .clipShape(Circle())
                 }
-                .padding(.horizontal)
+                .padding(.leading, 8)
             }
-            .padding(.bottom)
+            .padding(.horizontal)
+            .padding(.bottom, 10)
         }
         .navigationBarTitle("", displayMode: .inline)
         .onAppear {
@@ -121,29 +145,4 @@ struct ChatView: View {
     }
 }
 
-struct MessageView: View {
-    var message: Message
-    
-    var body: some View {
-        HStack {
-            if message.senderId == Auth.auth().currentUser?.uid {
-                Spacer()
-                Text(message.text)
-                    .padding()
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-                    .frame(maxWidth: 250, alignment: .trailing)
-            } else {
-                Text(message.text)
-                    .padding()
-                    .background(Color.gray.opacity(0.2))
-                    .foregroundColor(.black)
-                    .cornerRadius(10)
-                    .frame(maxWidth: 250, alignment: .leading)
-                Spacer()
-            }
-        }
-        .padding(.horizontal)
-    }
-}
+
