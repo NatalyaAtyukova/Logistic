@@ -40,8 +40,7 @@ struct AdminTabView: View {
                 VStack(spacing: 0) {
                     ZStack(alignment: .topTrailing) {
                         MapAdminView(driverLocations: $driverLocations, order: order, region: $region, isInitialRegionSet: $isInitialRegionSet)
-                            .edgesIgnoringSafeArea(.all)
-                            .clipShape(RoundedRectangle(cornerRadius: 20)) // Добавляем закругленные углы
+                            .edgesIgnoringSafeArea(.all) // Позволяет карте занимать весь экран
                             .shadow(radius: 10) // Добавляем тень
                         
                         VStack {

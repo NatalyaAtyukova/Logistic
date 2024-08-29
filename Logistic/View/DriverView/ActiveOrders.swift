@@ -4,7 +4,6 @@ import MapKit
 import CoreLocation
 import FirebaseFirestore
 
-
 struct ActiveOrders: View {
     @ObservedObject var alertManager: AlertManager
     @Binding var orders: [OrderItem]
@@ -17,33 +16,97 @@ struct ActiveOrders: View {
 
     var body: some View {
         NavigationView {
-            VStack {
-                // Список заказов
-                List {
-                    ForEach(orders) { order in
-                        OrderRow(order: order,
-                                 onSelect: {
-                                     self.selectedOrder = order
-                                     self.showingOrderOnMap = true
-                                 },
-                                 onActions: {
-                                     self.selectedOrder = order
-                                     self.showingActionSheet = true
-                                 })
+            VStack(spacing: 0) {
+                if orders.isEmpty {
+                    Text("Нет активных заказов")
+                        .foregroundColor(.gray)
+                        .padding()
+                } else {
+                    ScrollView {
+                        VStack(spacing: 10) { // Убираем лишние отступы и делаем фон шире
+                            ForEach(orders) { order in
+                                VStack(alignment: .leading, spacing: 15) {
+                                    HStack {
+                                        VStack(alignment: .leading) {
+                                            Text("Заказ #: \(order.id)")
+                                                .font(.headline)
+                                                .foregroundColor(.blue)
+                                            Text("Тип груза: \(order.cargoType)")
+                                            Text("Вес: \(order.cargoWeight) кг")
+                                        }
+                                        Spacer()
+                                        VStack(alignment: .trailing) {
+                                            Text("Статус:")
+                                            Text(order.status)
+                                                .bold()
+                                        }
+                                    }
+
+                                    Divider()
+
+                                    VStack(alignment: .leading, spacing: 5) {
+                                        Text("Откуда: \(order.senderAddress)")
+                                        Text("Куда: \(order.recipientAddress)")
+                                        Text("Водитель: \(order.driverName)")
+                                    }
+
+                                    HStack {
+                                        // Показать заказ на карте
+                                        Button(action: {
+                                            self.selectedOrder = order
+                                            self.showingOrderOnMap = true
+                                        }) {
+                                            HStack {
+                                                Image(systemName: "map")
+                                                Text("Показать на карте")
+                                            }
+                                            .font(.system(size: 16, weight: .medium))
+                                            .frame(maxWidth: .infinity) // Кнопка на всю ширину
+                                            .padding()
+                                            .foregroundColor(.white)
+                                            .background(Color.blue)
+                                            .cornerRadius(8)
+                                        }
+
+                                        // Действия с заказом
+                                        Button(action: {
+                                            self.selectedOrder = order
+                                            self.showingActionSheet = true
+                                        }) {
+                                            HStack {
+                                                Image(systemName: "ellipsis")
+                                                Text("Действия")
+                                            }
+                                            .font(.system(size: 16, weight: .medium))
+                                            .frame(maxWidth: .infinity) // Кнопка на всю ширину
+                                            .padding()
+                                            .foregroundColor(.white)
+                                            .background(Color.green)
+                                            .cornerRadius(8)
+                                        }
+                                    }
+                                    .frame(maxWidth: .infinity) // Обе кнопки на всю ширину блока
+                                }
+                                .padding()
+                                .background(Color.white)
+                                .cornerRadius(12) // Небольшие закругления у карточек
+                                .shadow(color: Color.gray.opacity(0.4), radius: 5, x: 0, y: 5)
+                                .padding(.horizontal) // Увеличиваем горизонтальные отступы для расширения карточки
+                            }
+                        }
                     }
                 }
-                .listStyle(InsetGroupedListStyle())
-                .onAppear {
-                    fetchOrders()
-                }
+                Spacer()
             }
-            .navigationBarTitle("Мои заказы")
+            .navigationBarTitle("Мои заказы", displayMode: .inline)
             .alert(isPresented: $alertManager.showAlert) {
-                Alert(title: Text("Сообщение"),
-                      message: Text(alertManager.alertMessage),
-                      dismissButton: .default(Text("OK")) {
-                          alertManager.showAlert = false
-                      })
+                Alert(
+                    title: Text("Сообщение"),
+                    message: Text(alertManager.alertMessage),
+                    dismissButton: .default(Text("OK")) {
+                        alertManager.showAlert = false
+                    }
+                )
             }
             .actionSheet(isPresented: $showingActionSheet) {
                 ActionSheet(
@@ -69,9 +132,11 @@ struct ActiveOrders: View {
                     MapViewWithOrder(order: selectedOrder, isPresented: $showingOrderOnMap, region: $locationManager.region)
                 }
             }
+            .onAppear {
+                fetchOrders()
+            }
         }
     }
-
 
     func fetchOrders() {
         getDriversOrders(alertManager: alertManager) { fetchedOrders, error in

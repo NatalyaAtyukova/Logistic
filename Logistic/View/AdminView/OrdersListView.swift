@@ -10,11 +10,10 @@ struct OrdersListView: View {
     @ObservedObject var alertManager: AlertManager
     @State private var selectedStatus: String = "Все"
     @State private var editingOrder: OrderItem? = nil
-    
+
     var body: some View {
         NavigationView {
-            VStack(spacing: 0) { // Убираем любой отступ между элементами
-                // Убираем лишний отступ у Picker
+            VStack(spacing: 0) {
                 Picker("Статус", selection: $selectedStatus) {
                     Text("Все").tag("Все")
                     Text("Новый").tag("Новый")
@@ -22,7 +21,8 @@ struct OrdersListView: View {
                     Text("Доставлено").tag("Доставлено")
                 }
                 .pickerStyle(SegmentedPickerStyle())
-                .padding(.horizontal) // Оставляем только горизонтальные отступы
+                .padding(.horizontal)
+                .offset(y: -40) // Сдвигаем вверх Picker для уменьшения отступа
                 
                 if filteredOrders.isEmpty {
                     Text("Нет доступных заказов")
@@ -30,9 +30,9 @@ struct OrdersListView: View {
                         .padding()
                 } else {
                     ScrollView {
-                        LazyVStack {
+                        LazyVStack(spacing: 12) {
                             ForEach(filteredOrders) { order in
-                                VStack(alignment: .leading, spacing: 10) {
+                                VStack(alignment: .leading, spacing: 12) {
                                     HStack {
                                         VStack(alignment: .leading) {
                                             Text("Заказ #: \(order.id)")
@@ -48,18 +48,18 @@ struct OrdersListView: View {
                                                 .bold()
                                         }
                                     }
-                                    
+
                                     Divider()
-                                    
-                                    VStack(alignment: .leading) {
+
+                                    VStack(alignment: .leading, spacing: 5) {
                                         Text("Получатель: \(order.recipientCompany)")
                                         Text("Откуда: \(order.senderAddress)")
                                         Text("Куда: \(order.recipientAddress)")
                                         Text("Водитель: \(order.driverName)")
                                     }
-                                    
+
                                     HStack {
-                                        // Выбор заказа
+                                        // Кнопка выбора заказа
                                         Button(action: {
                                             self.selectedOrder = order
                                         }) {
@@ -71,10 +71,10 @@ struct OrdersListView: View {
                                             .padding()
                                             .foregroundColor(.white)
                                             .background(Color.blue)
-                                            .cornerRadius(10)
+                                            .cornerRadius(8)
                                         }
-                                        
-                                        // Редактирование заказа
+
+                                        // Кнопка редактирования заказа
                                         Button(action: {
                                             self.editingOrder = order
                                         }) {
@@ -86,20 +86,20 @@ struct OrdersListView: View {
                                             .padding()
                                             .foregroundColor(.white)
                                             .background(Color.green)
-                                            .cornerRadius(10)
+                                            .cornerRadius(8)
                                         }
                                     }
+                                    .frame(maxWidth: .infinity) // Убедитесь, что HStack занимает всю доступную ширину
+                                    .padding([.leading, .trailing], 8) // Добавляем горизонтальные отступы, чтобы кнопки не прилипали к краям
                                 }
-                                .padding(.vertical, 10) // Добавляем только вертикальные отступы для карточек
+                                .padding()
+                                .background(Color.white)
+                                .cornerRadius(12)
+                                .shadow(color: .gray.opacity(0.4), radius: 5, x: 0, y: 5)
                                 .padding(.horizontal)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 15)
-                                        .fill(Color.white)
-                                        .shadow(color: .gray.opacity(0.4), radius: 5, x: 0, y: 5)
-                                )
-                                .padding([.top, .horizontal]) // Убираем лишние отступы
                             }
                         }
+                        .padding(.top, 8)
                     }
                 }
                 Spacer()
@@ -118,7 +118,7 @@ struct OrdersListView: View {
             .background(Color(.systemGroupedBackground).edgesIgnoringSafeArea(.all))
         }
     }
-    
+
     var filteredOrders: [OrderItem] {
         if selectedStatus == "Все" {
             return orders
@@ -126,10 +126,10 @@ struct OrdersListView: View {
             return orders.filter { $0.status == selectedStatus }
         }
     }
-    
+
     func getOrders() {
         let db = Firestore.firestore()
-        
+
         if let currentUser = Auth.auth().currentUser {
             db.collection("OrdersList")
                 .whereField("adminID", isEqualTo: currentUser.uid)
@@ -138,12 +138,12 @@ struct OrdersListView: View {
                         alertManager.showError(message: "Ошибка при получении заказов: \(error.localizedDescription)")
                         return
                     }
-                    
+
                     guard let documents = snapshot?.documents else {
                         print("No documents in snapshot")
                         return
                     }
-                    
+
                     self.orders = documents.compactMap { document in
                         do {
                             let order = try document.data(as: OrderItem.self)
@@ -156,7 +156,7 @@ struct OrdersListView: View {
                 }
         }
     }
-    
+
     // Функция для форматирования даты
     func formatDate(_ date: Date) -> String {
         let formatter = DateFormatter()
