@@ -7,7 +7,7 @@ import FirebaseFirestore
 struct FindListView: View {
     @ObservedObject var alertManager: AlertManager
     var currentUser: UserInfo
-    var orders: [OrderItem]
+    @Binding var orders: [OrderItem]
 
     var body: some View {
         NavigationView {
@@ -19,6 +19,11 @@ struct FindListView: View {
                 } else {
                     List(orders.filter { $0.status == "Новый" }) { order in
                         VStack(alignment: .leading, spacing: 12) {
+                            // Выводим номер заказа
+                            Text("Заказ #: \(order.id)")
+                                .font(.headline)
+                            
+                            // Остальная информация о заказе
                             Text("Откуда: \(getCityName(from: order.senderAddress))")
                                 .font(.headline)
                             Text("Куда: \(getCityName(from: order.recipientAddress))")
@@ -28,8 +33,9 @@ struct FindListView: View {
                             Text("Вес груза: \(order.cargoWeight) кг")
                             Text("Крайний срок доставки: \(formatDate(order.deliveryDeadline))")
 
+                            // Кнопка "Взять в работу"
                             Button(action: {
-                                takeOrder(orderID: order.id)
+                                takeOrder(orderID: order.id)  // Действие при нажатии кнопки
                             }) {
                                 HStack {
                                     Image(systemName: "checkmark.circle.fill")
@@ -41,13 +47,17 @@ struct FindListView: View {
                                 .background(Color.blue)
                                 .cornerRadius(8)
                             }
+                            .buttonStyle(PlainButtonStyle())  // Убираем системный эффект кнопки
                         }
                         .padding()
+                        .frame(maxWidth: .infinity) // Делаем карточку шире
                         .background(Color.white)
-                        .cornerRadius(12)
+                        .cornerRadius(12) // Закругления только для самой карточки заказа
                         .shadow(color: .gray.opacity(0.4), radius: 5, x: 0, y: 5)
                         .padding(.horizontal)
+                        .contentShape(Rectangle()) // Устанавливаем, что вся карточка имеет форму, но не является кликабельной
                     }
+                    .listStyle(PlainListStyle()) // Убираем стиль с разделителями для списка
                 }
             }
             .navigationBarTitle("Поиск заказа", displayMode: .inline)
@@ -61,7 +71,7 @@ struct FindListView: View {
             .onAppear {
                 print("Displaying orders: \(orders)")
             }
-            .background(Color(.systemGroupedBackground).edgesIgnoringSafeArea(.all))
+            .background(Color.white.edgesIgnoringSafeArea(.all)) // Устанавливаем белый фон без закруглений
         }
     }
 

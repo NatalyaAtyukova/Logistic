@@ -54,7 +54,7 @@ struct FindOrderView: View {
                 }
                 
                 if let currentUser = currentUser {
-                    NavigationLink(destination: FindListView(alertManager: alertManager, currentUser: currentUser, orders: orders), isActive: $isShowingOrdersList) {
+                    NavigationLink(destination: FindListView(alertManager: alertManager, currentUser: currentUser, orders: $orders), isActive: $isShowingOrdersList) {
                         EmptyView()
                     }
                     .hidden()

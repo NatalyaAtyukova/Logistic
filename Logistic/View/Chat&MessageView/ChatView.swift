@@ -24,13 +24,13 @@ struct ChatView: View {
                 .padding(.leading)
                 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Chat for Order ID: \(chatInfo.orderId)")
+                    Text("Чат для заказа #: \(chatInfo.orderId)")
                         .font(.headline)
                         .fontWeight(.bold)
-                    Text("Recipient Address: \(chatInfo.recipientAddress)")
+                    Text("Получатель: \(chatInfo.recipientAddress)")
                         .font(.subheadline)
                         .foregroundColor(.gray)
-                    Text("Sender Address: \(chatInfo.senderAddress)")
+                    Text("Отправитель: \(chatInfo.senderAddress)")
                         .font(.subheadline)
                         .foregroundColor(.gray)
                 }
@@ -97,12 +97,12 @@ struct ChatView: View {
             .order(by: "timestamp")
             .addSnapshotListener { querySnapshot, error in
                 if let error = error {
-                    print("Error fetching messages: \(error)")
+                    print("Ошибка получения сообщений: \(error)")
                     return
                 }
                 
                 guard let documents = querySnapshot?.documents else {
-                    print("No messages")
+                    print("Нет сообщений")
                     return
                 }
                 
@@ -123,7 +123,7 @@ struct ChatView: View {
     
     func sendMessage(messageText: String, chatId: String) {
         guard let currentUser = Auth.auth().currentUser else {
-            print("User is not authenticated.")
+            print("Пользователь не аутентифицирован")
             return
         }
         
@@ -136,9 +136,9 @@ struct ChatView: View {
             "timestamp": timestamp
         ]) { error in
             if let error = error {
-                print("Error adding document: \(error)")
+                print("Ошибка при отправке сообщения: \(error)")
             } else {
-                print("Message added successfully.")
+                print("Сообщение отправлено")
                 self.messageText = ""
             }
         }
