@@ -10,7 +10,9 @@
 		C803D8482BB4A86E00086411 /* AdminProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C803D8472BB4A86E00086411 /* AdminProfileView.swift */; };
 		C803D84C2BB4B2A100086411 /* AdminTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C803D84B2BB4B2A100086411 /* AdminTabView.swift */; };
 		C803D8562BB4B5BC00086411 /* DriverTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C803D8552BB4B5BC00086411 /* DriverTabView.swift */; };
-		C827D7302C728411001C4EE5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C827D72F2C728411001C4EE5 /* GoogleService-Info.plist */; };
+		C80CE94C2C8218110002D5D4 /* ChatDriverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80CE94B2C8218110002D5D4 /* ChatDriverView.swift */; };
+		C80CE94E2C82181E0002D5D4 /* ChatAdminView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80CE94D2C82181E0002D5D4 /* ChatAdminView.swift */; };
+		C80CE9502C82183A0002D5D4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C80CE94F2C82183A0002D5D4 /* GoogleService-Info.plist */; };
 		C82DC3E12C3A9915004CE6C8 /* AddressAutocompleteTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C82DC3E02C3A9915004CE6C8 /* AddressAutocompleteTextField.swift */; };
 		C87D71762C49450E00BCF2C9 /* ZoomControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C87D71752C49450E00BCF2C9 /* ZoomControlsView.swift */; };
 		C87D9C432BF65E2A003354F2 /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C87D9C422BF65E2A003354F2 /* AlertManager.swift */; };
@@ -31,14 +33,12 @@
 		C8BA559D2C7D1595009C152A /* OrdersListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BA559C2C7D1595009C152A /* OrdersListView.swift */; };
 		C8BA559F2C7D1780009C152A /* AddOrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BA559E2C7D1780009C152A /* AddOrderView.swift */; };
 		C8BA55A12C7D17DC009C152A /* EditOrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BA55A02C7D17DC009C152A /* EditOrderView.swift */; };
-		C8BA55A32C7D1804009C152A /* ChatAdminView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BA55A22C7D1804009C152A /* ChatAdminView.swift */; };
 		C8BA55A52C7D1832009C152A /* MapAdminView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BA55A42C7D1832009C152A /* MapAdminView.swift */; };
 		C8BA55A82C7D1A06009C152A /* FindOrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BA55A72C7D1A06009C152A /* FindOrderView.swift */; };
 		C8BA55AA2C7D1A37009C152A /* FindListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BA55A92C7D1A36009C152A /* FindListView.swift */; };
 		C8BA55AE2C7D1A62009C152A /* ActiveOrders.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BA55AD2C7D1A62009C152A /* ActiveOrders.swift */; };
 		C8BA55B02C7D1A99009C152A /* OrderRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BA55AF2C7D1A99009C152A /* OrderRow.swift */; };
 		C8BA55B22C7D1ABF009C152A /* MapViewWithOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BA55B12C7D1ABF009C152A /* MapViewWithOrder.swift */; };
-		C8BA55B42C7D1ADB009C152A /* ChatDriverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BA55B32C7D1ADB009C152A /* ChatDriverView.swift */; };
 		C8BA55B62C7D1AF7009C152A /* MapViewWithRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BA55B52C7D1AF7009C152A /* MapViewWithRoute.swift */; };
 		C8BA55B82C7E6E3C009C152A /* ChatCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BA55B72C7E6E3C009C152A /* ChatCard.swift */; };
 		C8BA55BA2C7E6EE8009C152A /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BA55B92C7E6EE8009C152A /* MessageView.swift */; };
@@ -70,7 +70,9 @@
 		C803D8472BB4A86E00086411 /* AdminProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminProfileView.swift; sourceTree = "<group>"; };
 		C803D84B2BB4B2A100086411 /* AdminTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminTabView.swift; sourceTree = "<group>"; };
 		C803D8552BB4B5BC00086411 /* DriverTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriverTabView.swift; sourceTree = "<group>"; };
-		C827D72F2C728411001C4EE5 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		C80CE94B2C8218110002D5D4 /* ChatDriverView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatDriverView.swift; path = "Logistic/View/Chat&MessageView/ChatDriverView.swift"; sourceTree = SOURCE_ROOT; };
+		C80CE94D2C82181E0002D5D4 /* ChatAdminView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatAdminView.swift; path = "Logistic/View/Chat&MessageView/ChatAdminView.swift"; sourceTree = SOURCE_ROOT; };
+		C80CE94F2C82183A0002D5D4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C82DC3E02C3A9915004CE6C8 /* AddressAutocompleteTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressAutocompleteTextField.swift; sourceTree = "<group>"; };
 		C87D71752C49450E00BCF2C9 /* ZoomControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomControlsView.swift; sourceTree = "<group>"; };
 		C87D9C422BF65E2A003354F2 /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
@@ -89,14 +91,12 @@
 		C8BA559C2C7D1595009C152A /* OrdersListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrdersListView.swift; sourceTree = "<group>"; };
 		C8BA559E2C7D1780009C152A /* AddOrderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddOrderView.swift; sourceTree = "<group>"; };
 		C8BA55A02C7D17DC009C152A /* EditOrderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditOrderView.swift; sourceTree = "<group>"; };
-		C8BA55A22C7D1804009C152A /* ChatAdminView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatAdminView.swift; sourceTree = "<group>"; };
 		C8BA55A42C7D1832009C152A /* MapAdminView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapAdminView.swift; sourceTree = "<group>"; };
 		C8BA55A72C7D1A06009C152A /* FindOrderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindOrderView.swift; sourceTree = "<group>"; };
 		C8BA55A92C7D1A36009C152A /* FindListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindListView.swift; sourceTree = "<group>"; };
 		C8BA55AD2C7D1A62009C152A /* ActiveOrders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveOrders.swift; sourceTree = "<group>"; };
 		C8BA55AF2C7D1A99009C152A /* OrderRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderRow.swift; sourceTree = "<group>"; };
 		C8BA55B12C7D1ABF009C152A /* MapViewWithOrder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewWithOrder.swift; sourceTree = "<group>"; };
-		C8BA55B32C7D1ADB009C152A /* ChatDriverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatDriverView.swift; sourceTree = "<group>"; };
 		C8BA55B52C7D1AF7009C152A /* MapViewWithRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewWithRoute.swift; sourceTree = "<group>"; };
 		C8BA55B72C7E6E3C009C152A /* ChatCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCard.swift; sourceTree = "<group>"; };
 		C8BA55B92C7E6EE8009C152A /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
@@ -153,7 +153,6 @@
 			children = (
 				C803D84B2BB4B2A100086411 /* AdminTabView.swift */,
 				C8BA559E2C7D1780009C152A /* AddOrderView.swift */,
-				C8BA55A22C7D1804009C152A /* ChatAdminView.swift */,
 				C8BA55A02C7D17DC009C152A /* EditOrderView.swift */,
 				C8BA55A42C7D1832009C152A /* MapAdminView.swift */,
 				C8BA559C2C7D1595009C152A /* OrdersListView.swift */,
@@ -166,7 +165,6 @@
 			children = (
 				C803D8552BB4B5BC00086411 /* DriverTabView.swift */,
 				C8BA55AD2C7D1A62009C152A /* ActiveOrders.swift */,
-				C8BA55B32C7D1ADB009C152A /* ChatDriverView.swift */,
 				C8BA55A72C7D1A06009C152A /* FindOrderView.swift */,
 				C8BA55A92C7D1A36009C152A /* FindListView.swift */,
 				C8BA55B12C7D1ABF009C152A /* MapViewWithOrder.swift */,
@@ -190,7 +188,7 @@
 		C88F35672BB44B7E00B177F0 = {
 			isa = PBXGroup;
 			children = (
-				C827D72F2C728411001C4EE5 /* GoogleService-Info.plist */,
+				C80CE94F2C82183A0002D5D4 /* GoogleService-Info.plist */,
 				C88F35722BB44B7E00B177F0 /* Logistic */,
 				C88F35712BB44B7E00B177F0 /* Products */,
 			);
@@ -236,6 +234,8 @@
 			children = (
 				C8BA55B72C7E6E3C009C152A /* ChatCard.swift */,
 				C8A4A8372BC04CC600164865 /* ChatView.swift */,
+				C80CE94D2C82181E0002D5D4 /* ChatAdminView.swift */,
+				C80CE94B2C8218110002D5D4 /* ChatDriverView.swift */,
 				C8BA55B92C7E6EE8009C152A /* MessageView.swift */,
 			);
 			path = "Chat&MessageView";
@@ -369,7 +369,7 @@
 			files = (
 				C88F357B2BB44B8100B177F0 /* Preview Assets.xcassets in Resources */,
 				C88F35782BB44B8100B177F0 /* Assets.xcassets in Resources */,
-				C827D7302C728411001C4EE5 /* GoogleService-Info.plist in Resources */,
+				C80CE9502C82183A0002D5D4 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -412,17 +412,17 @@
 				C8BA55B62C7D1AF7009C152A /* MapViewWithRoute.swift in Sources */,
 				C88CD1DD2C553C05000E9317 /* CityAutocompleteTextField.swift in Sources */,
 				C8BA55A12C7D17DC009C152A /* EditOrderView.swift in Sources */,
-				C8BA55B42C7D1ADB009C152A /* ChatDriverView.swift in Sources */,
+				C80CE94E2C82181E0002D5D4 /* ChatAdminView.swift in Sources */,
 				C8BA55A52C7D1832009C152A /* MapAdminView.swift in Sources */,
 				C8BA55AA2C7D1A37009C152A /* FindListView.swift in Sources */,
 				C8BA55A82C7D1A06009C152A /* FindOrderView.swift in Sources */,
 				C8BA55AE2C7D1A62009C152A /* ActiveOrders.swift in Sources */,
+				C80CE94C2C8218110002D5D4 /* ChatDriverView.swift in Sources */,
 				C803D8562BB4B5BC00086411 /* DriverTabView.swift in Sources */,
 				C8F5CF022C397472003E2E40 /* DaDataService.swift in Sources */,
 				C8A4A8382BC04CC600164865 /* ChatView.swift in Sources */,
 				C88F35762BB44B7E00B177F0 /* ContentView.swift in Sources */,
 				C8BA559D2C7D1595009C152A /* OrdersListView.swift in Sources */,
-				C8BA55A32C7D1804009C152A /* ChatAdminView.swift in Sources */,
 				C88F35742BB44B7E00B177F0 /* LogisticApp.swift in Sources */,
 				C803D84C2BB4B2A100086411 /* AdminTabView.swift in Sources */,
 				C8EAF8D52C755780008659F5 /* ResetPasswordView.swift in Sources */,

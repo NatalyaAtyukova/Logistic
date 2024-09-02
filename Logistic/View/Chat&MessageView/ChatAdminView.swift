@@ -3,43 +3,57 @@ import Firebase
 import FirebaseFirestore
 
 struct ChatAdminView: View {
-    @State private var activeChats: [ChatInfo] = [] // Чаты по активным заказам
-    @State private var completedChats: [ChatInfo] = [] // Чаты по завершенным заказам
+    @State private var activeChats: [ChatInfo] = []
+    @State private var completedChats: [ChatInfo] = []
     @State private var selectedChat: ChatInfo?
     @State private var isChatViewPresented = false
+
+    @StateObject private var alertManager = AlertManager()
+
     let db = Firestore.firestore()
     let currentUser = Auth.auth().currentUser
-    @StateObject private var alertManager = AlertManager()
 
     var body: some View {
         NavigationView {
             VStack {
-                if activeChats.isEmpty {
-                    Text("Нет доступных чатов по активным заказам.")
+                if activeChats.isEmpty && completedChats.isEmpty {
+                    Text("Нет доступных чатов.")
                         .padding()
                         .foregroundColor(.gray)
                 } else {
                     ScrollView {
                         LazyVStack(spacing: 16) {
-                            ForEach(activeChats, id: \.id) { chat in
-                                ChatCard(chat: chat)
-                                    .onTapGesture {
-                                        withAnimation {
-                                            selectedChat = chat
-                                            isChatViewPresented = true
+                            Section(header: Text("Активные чаты")) {
+                                ForEach(activeChats, id: \.id) { chat in
+                                    ChatCard(chat: chat)
+                                        .onTapGesture {
+                                            withAnimation {
+                                                selectedChat = chat
+                                                isChatViewPresented = true
+                                            }
                                         }
-                                    }
+                                        .frame(maxWidth: .infinity)
+                                }
+                            }
+                            
+                            Section(header: Text("Завершенные чаты")) {
+                                ForEach(completedChats, id: \.id) { chat in
+                                    ChatCard(chat: chat)
+                                        .onTapGesture {
+                                            withAnimation {
+                                                selectedChat = chat
+                                                isChatViewPresented = true
+                                            }
+                                        }
+                                        .frame(maxWidth: .infinity)
+                                }
                             }
                         }
                         .padding()
                     }
                 }
             }
-            .navigationTitle("Чат организации")
-            .navigationBarItems(trailing: NavigationLink("Завершенные заказы", destination: CompletedOrdersView(chats: completedChats, onChatSelect: { chat in
-                self.selectedChat = chat
-                self.isChatViewPresented = true
-            })))
+            .navigationTitle("Чаты администратора")
             .background(Color(.systemGroupedBackground).ignoresSafeArea())
         }
         .sheet(isPresented: $isChatViewPresented) {
@@ -48,29 +62,36 @@ struct ChatAdminView: View {
             }
         }
         .onAppear {
-            loadExistingChats()
+            loadChats()
             startListeningForNewOrders()
         }
     }
 
-    private func loadExistingChats() {
+    private func loadChats() {
         guard let currentUser = currentUser else {
             alertManager.showError(message: "Пользователь не аутентифицирован.")
             return
         }
-        
+
         let adminId = currentUser.uid
+        print("Загрузка чатов для администратора с ID \(adminId)")
 
         db.collection("Chats")
             .whereField("participants", arrayContains: adminId)
-            .getDocuments { (querySnapshot, error) in
+            .addSnapshotListener { querySnapshot, error in
                 if let error = error {
                     alertManager.showError(message: "Ошибка при получении чатов: \(error.localizedDescription)")
                 } else {
-                    let chats = querySnapshot?.documents.compactMap { document in
+                    guard let documents = querySnapshot?.documents else {
+                        print("Ошибка: документы пусты")
+                        return
+                    }
+
+                    let chats = documents.compactMap { document -> ChatInfo? in
                         try? document.data(as: ChatInfo.self)
-                    } ?? []
-                    
+                    }
+
+                    // Фильтруем чаты по статусу заказа
                     filterChatsByOrderStatus(chats: chats)
                 }
             }
@@ -84,17 +105,19 @@ struct ChatAdminView: View {
 
         for chat in chats {
             group.enter()
-
             db.collection("OrdersList")
                 .document(chat.orderId)
                 .getDocument { documentSnapshot, error in
                     if let document = documentSnapshot, document.exists {
                         let order = try? document.data(as: OrderItem.self)
                         if let order = order {
-                            if order.status == "Доставлено" {
-                                completedChatsTemp.append(chat) // Чат по завершенному заказу
-                            } else if order.status == "Новый" || order.status == "В пути" {
-                                activeChatsTemp.append(chat) // Чат по активному заказу
+                            switch order.status {
+                            case "Доставлено":
+                                completedChatsTemp.append(chat)
+                            case "Новый", "В пути":
+                                activeChatsTemp.append(chat)
+                            default:
+                                break
                             }
                         }
                     }
@@ -113,72 +136,75 @@ struct ChatAdminView: View {
             alertManager.showError(message: "Пользователь не аутентифицирован.")
             return
         }
-        
+
         let adminId = currentUser.uid
+        print("Начало прослушивания новых заказов для администратора с ID \(adminId)")
 
         db.collection("OrdersList")
             .whereField("adminID", isEqualTo: adminId)
             .addSnapshotListener { querySnapshot, error in
                 guard let snapshot = querySnapshot else {
-                    alertManager.showError(message: "Ошибка при прослушивании заказов: \(error?.localizedDescription ?? "Unknown error")")
+                    alertManager.showError(message: "Ошибка при прослушивании заказов: \(error?.localizedDescription ?? "Неизвестная ошибка")")
                     return
                 }
 
                 snapshot.documentChanges.forEach { change in
                     if change.type == .added {
-                        guard let order = try? change.document.data(as: OrderItem.self) else {
-                            alertManager.showError(message: "Ошибка при получении данных заказа")
-                            return
+                        let orderData = change.document.data()
+                        if let orderId = orderData["id"] as? String,
+                           let recipientAddress = orderData["recipientAddress"] as? String,
+                           let senderAddress = orderData["senderAddress"] as? String,
+                           let driverId = orderData["driverID"] as? String {
+                            // Проверка наличия чата перед созданием
+                            checkAndCreateChat(orderId: orderId, recipientAddress: recipientAddress, senderAddress: senderAddress, driverId: driverId, adminId: adminId)
+                        } else {
+                            alertManager.showError(message: "Недостаточно данных для заказа")
                         }
-
-                        createChatForOrder(order: order)
                     }
                 }
             }
     }
 
-    private func createChatForOrder(order: OrderItem) {
-        guard let currentUser = currentUser else {
-            alertManager.showError(message: "Пользователь не аутентифицирован.")
-            return
-        }
-        
-        let adminId = currentUser.uid
-        let driverId = order.driverName
-        let participants = [adminId, driverId]
-
+    // Проверка существования чата перед его созданием
+    private func checkAndCreateChat(orderId: String, recipientAddress: String, senderAddress: String, driverId: String, adminId: String) {
         db.collection("Chats")
-            .whereField("orderId", isEqualTo: order.id)
+            .whereField("orderId", isEqualTo: orderId)
             .getDocuments { (querySnapshot, error) in
                 if let error = error {
-                    alertManager.showError(message: "Ошибка при проверке существования чата: \(error.localizedDescription)")
+                    print("Ошибка при проверке существования чата: \(error.localizedDescription)")
                     return
                 }
 
-                if let documents = querySnapshot?.documents, !documents.isEmpty {
-                    alertManager.showError(message: "Чат для заказа \(order.id) уже существует.")
-                } else {
-                    createNewChat(orderId: order.id, recipientAddress: order.recipientAddress, senderAddress: order.senderAddress, participants: participants)
+                // Если чат уже существует, ничего не делаем
+                if querySnapshot?.documents.isEmpty == false {
+                    print("Чат для заказа \(orderId) уже существует")
+                    return
                 }
+
+                // Чат не существует — создаем новый
+                createNewChat(orderId: orderId, recipientAddress: recipientAddress, senderAddress: senderAddress, driverId: driverId, adminId: adminId)
             }
     }
 
-    private func createNewChat(orderId: String, recipientAddress: String, senderAddress: String, participants: [String]) {
-        let newChatId = UUID().uuidString
-        let newChat = ChatInfo(id: newChatId, orderId: orderId, recipientAddress: recipientAddress, senderAddress: senderAddress, participants: participants)
-        
-        do {
-            try db.collection("Chats").document(newChatId).setData(from: newChat) { error in
-                if let error = error {
-                    alertManager.showError(message: "Ошибка при создании документа чата: \(error.localizedDescription)")
-                    return
-                }
-                // Обновляем список чатов после успешного создания
-                loadExistingChats()
+    private func createNewChat(orderId: String, recipientAddress: String, senderAddress: String, driverId: String, adminId: String) {
+        print("Создание нового чата для заказа \(orderId)")
+        let chatId = UUID().uuidString.uppercased()
+        let chatData: [String: Any] = [
+            "id": chatId,
+            "orderId": orderId,
+            "recipientAddress": recipientAddress,
+            "senderAddress": senderAddress,
+            "participants": [adminId, driverId]
+        ]
+
+        db.collection("Chats").document(chatId).setData(chatData) { error in
+            if let error = error {
+                print("Ошибка при создании чата: \(error.localizedDescription)")
+                alertManager.showError(message: "Ошибка при создании документа чата: \(error.localizedDescription)")
+                return
             }
-        } catch {
-            alertManager.showError(message: "Ошибка при сохранении документа чата: \(error.localizedDescription)")
+            print("Чат успешно создан для заказа \(orderId)")
+            loadChats()
         }
     }
 }
-
