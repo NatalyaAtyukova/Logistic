@@ -36,8 +36,8 @@ struct ActiveOrders: View {
                                         }
                                         Spacer()
                                         VStack(alignment: .trailing) {
-                                            Text("Статус:")
-                                            Text(order.status)
+                                            Text("Крайний срок:")
+                                            Text(formatDate(order.deliveryDeadline))
                                                 .bold()
                                         }
                                     }
@@ -48,6 +48,8 @@ struct ActiveOrders: View {
                                         Text("Откуда: \(order.senderAddress)")
                                         Text("Куда: \(order.recipientAddress)")
                                         Text("Водитель: \(order.driverName)")
+                                        Text("Информация о заказе: \(order.orderInfo)")  
+                                        Text("Статус: \(order.status)")  
                                     }
 
                                     HStack {

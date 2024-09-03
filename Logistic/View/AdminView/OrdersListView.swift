@@ -1,3 +1,4 @@
+
 import SwiftUI
 import Firebase
 import FirebaseFirestore
@@ -14,6 +15,7 @@ struct OrdersListView: View {
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
+                // Убираем дублирующийся заголовок "Список заказов"
                 Picker("Статус", selection: $selectedStatus) {
                     Text("Все").tag("Все")
                     Text("Новый").tag("Новый")
@@ -22,17 +24,17 @@ struct OrdersListView: View {
                 }
                 .pickerStyle(SegmentedPickerStyle())
                 .padding(.horizontal)
-                .offset(y: -40) // Сдвигаем вверх Picker для уменьшения отступа
-                
+                .offset(y: -20) // Подправляем смещение Picker
+
                 if filteredOrders.isEmpty {
                     Text("Нет доступных заказов")
                         .foregroundColor(.gray)
                         .padding()
                 } else {
                     ScrollView {
-                        LazyVStack(spacing: 12) {
+                        LazyVStack(spacing: 10) {
                             ForEach(filteredOrders) { order in
-                                VStack(alignment: .leading, spacing: 12) {
+                                VStack(alignment: .leading, spacing: 15) {
                                     HStack {
                                         VStack(alignment: .leading) {
                                             Text("Заказ #: \(order.id)")
@@ -56,8 +58,10 @@ struct OrdersListView: View {
                                         Text("Откуда: \(order.senderAddress)")
                                         Text("Куда: \(order.recipientAddress)")
                                         Text("Водитель: \(order.driverName)")
+                                        Text("Информация о заказе: \(order.orderInfo)")  
+                                        Text("Статус: \(order.status)")  
                                     }
-
+                                    
                                     HStack {
                                         // Кнопка выбора заказа
                                         Button(action: {
@@ -89,8 +93,8 @@ struct OrdersListView: View {
                                             .cornerRadius(8)
                                         }
                                     }
-                                    .frame(maxWidth: .infinity) // Убедитесь, что HStack занимает всю доступную ширину
-                                    .padding([.leading, .trailing], 8) // Добавляем горизонтальные отступы, чтобы кнопки не прилипали к краям
+                                    .frame(maxWidth: .infinity)
+                                    .padding([.leading, .trailing], 8)
                                 }
                                 .padding()
                                 .background(Color.white)
@@ -106,7 +110,7 @@ struct OrdersListView: View {
             }
             .navigationBarTitle("Список заказов", displayMode: .inline)
             .onAppear {
-                getOrders()
+                getOrders() // Получаем заказы при загрузке
             }
             .sheet(item: self.$editingOrder) { order in
                 EditOrderView(order: self.$editingOrder, alertManager: self.alertManager)
@@ -119,6 +123,7 @@ struct OrdersListView: View {
         }
     }
 
+    // Фильтрация заказов по выбранному статусу
     var filteredOrders: [OrderItem] {
         if selectedStatus == "Все" {
             return orders
