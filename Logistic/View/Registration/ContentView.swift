@@ -76,8 +76,27 @@ struct ContentView: View {
             }
         }
         .navigationTitle("Logistic")
+        .onAppear {
+            checkIfLogged()
+        }
     }
     
+    // Проверка статуса авторизации при запуске
+    func checkIfLogged() {
+        if UserDefaults.standard.bool(forKey: "isLogged") {
+            self.isLogged = true
+            let userId = UserDefaults.standard.string(forKey: "userId") ?? ""
+            let role = UserDefaults.standard.string(forKey: "userRole") ?? ""
+            
+            if role == "admin" {
+                self.selectedView = AnyView(AdminTabView(userID: userId))
+            } else if role == "driver" {
+                self.selectedView = AnyView(DriverTabView(userID: userId))
+            }
+        }
+    }
+    
+    // Функция для входа
     func signIn() {
         Auth.auth().signIn(withEmail: email, password: password) { result, error in
             if let error = error {
@@ -99,6 +118,11 @@ struct ContentView: View {
                         self.userRole = "admin"
                         print("Роль пользователя: админ")
                         
+                        // Сохраняем данные в UserDefaults
+                        UserDefaults.standard.set(true, forKey: "isLogged")
+                        UserDefaults.standard.set(userId, forKey: "userId")
+                        UserDefaults.standard.set("admin", forKey: "userRole")
+                        
                         // Устанавливаем выбранное представление в AdminTabView
                         DispatchQueue.main.async {
                             self.isLogged = true
@@ -110,6 +134,11 @@ struct ContentView: View {
                             if let driverDocument = driverDocument, driverDocument.exists {
                                 self.userRole = "driver"
                                 print("Роль пользователя: водитель")
+                                
+                                // Сохраняем данные в UserDefaults
+                                UserDefaults.standard.set(true, forKey: "isLogged")
+                                UserDefaults.standard.set(userId, forKey: "userId")
+                                UserDefaults.standard.set("driver", forKey: "userRole")
                                 
                                 // Устанавливаем выбранное представление в DriverTabView
                                 DispatchQueue.main.async {

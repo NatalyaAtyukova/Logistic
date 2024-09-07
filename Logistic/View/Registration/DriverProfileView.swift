@@ -9,20 +9,20 @@ struct DriverProfileView: View {
     @State private var profileSaved: Bool = false
     @State private var navigateToDriverTab: Bool = false
     @Environment(\.presentationMode) var presentationMode
-
+    
     var userID: String
     var email: String
-
+    
     // Ошибки валидации
     @State private var firstNameError: String? = nil
     @State private var lastNameError: String? = nil
     @State private var licenseError: String? = nil
     @State private var phoneError: String? = nil
-
+    
     // Ограничение на количество символов
     private let maxPhoneNumberLength = 12  // +7 и 10 цифр
     private let maxLicenseNumberLength = 10 // Водительское удостоверение - 10 символов
-
+    
     // Валидация полей с использованием Validation
     func validateFields() -> Bool {
         // Очищаем предыдущие ошибки
@@ -63,7 +63,7 @@ struct DriverProfileView: View {
                         .padding(.leading)
                 }
             }
-
+            
             VStack(alignment: .leading) {
                 TextField("Фамилия", text: $lastName)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -76,7 +76,7 @@ struct DriverProfileView: View {
                         .padding(.leading)
                 }
             }
-
+            
             VStack(alignment: .leading) {
                 TextField("Номер водительского удостоверения", text: $licenseNumber)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -95,7 +95,7 @@ struct DriverProfileView: View {
                         .padding(.leading)
                 }
             }
-
+            
             VStack(alignment: .leading) {
                 TextField("Телефон", text: $phoneNumber)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -114,7 +114,7 @@ struct DriverProfileView: View {
                         .padding(.leading)
                 }
             }
-
+            
             Button(action: {
                 if validateFields() {
                     saveProfile()
@@ -132,7 +132,7 @@ struct DriverProfileView: View {
         }
         .navigationTitle("Профиль Водителя")
     }
-
+    
     func saveProfile() {
         let db = Firestore.firestore()
         
@@ -142,7 +142,7 @@ struct DriverProfileView: View {
             "firstName": firstName,
             "lastName": lastName,
             "licenseNumber": licenseNumber,
-            "phoneNumber": phoneNumber,
+            "phoneNumber": Validation.formatPhoneNumber(phoneNumber),
             "role": "driver"
         ]
         
@@ -150,6 +150,11 @@ struct DriverProfileView: View {
             if let error = error {
                 print("Ошибка при сохранении профиля: \(error.localizedDescription)")
             } else {
+                // Сохранение статуса авторизации и роли в UserDefaults
+                UserDefaults.standard.set(true, forKey: "isLogged")
+                UserDefaults.standard.set(userID, forKey: "userId")
+                UserDefaults.standard.set("driver", forKey: "userRole")
+                
                 profileSaved = true
                 navigateToDriverTab = true
                 presentationMode.wrappedValue.dismiss()

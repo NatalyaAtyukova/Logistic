@@ -1,5 +1,6 @@
 import SwiftUI
 import Firebase
+import UserNotifications
 
 // Окошко самого чата
 struct ChatView: View {
@@ -89,6 +90,7 @@ struct ChatView: View {
         .navigationBarTitle("", displayMode: .inline)
         .onAppear {
             loadMessages(forChat: chatInfo.id)
+            requestNotificationPermission()
         }
     }
     
@@ -114,7 +116,12 @@ struct ChatView: View {
                         return nil
                     }
                     
-                    return Message(id: document.documentID, text: text, senderId: senderId, timestamp: timestamp.dateValue(), chatId: chatId)
+                    let message = Message(id: document.documentID, text: text, senderId: senderId, timestamp: timestamp.dateValue(), chatId: chatId)
+                    
+                    // Отправляем локальное уведомление для нового сообщения, если отправитель не текущий пользователь
+                    sendLocalNotification(for: message)
+                    
+                    return message
                 }
                 
                 self.messages = messagesForChat
@@ -143,6 +150,38 @@ struct ChatView: View {
             }
         }
     }
+    
+    // Функция для отправки локального уведомления
+    func sendLocalNotification(for message: Message) {
+        guard message.senderId != Auth.auth().currentUser?.uid else {
+            return
+        }
+        
+        let content = UNMutableNotificationContent()
+        content.title = "Новое сообщение"
+        content.body = message.text
+        content.sound = UNNotificationSound.default
+        
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+        
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error = error {
+                print("Ошибка отправки локального уведомления: \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    // Запрос на разрешение отправки уведомлений
+    func requestNotificationPermission() {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+            if let error = error {
+                print("Ошибка запроса разрешений на уведомления: \(error.localizedDescription)")
+            } else if granted {
+                print("Разрешения на уведомления получены")
+            } else {
+                print("Разрешения на уведомления не предоставлены")
+            }
+        }
+    }
 }
-
-

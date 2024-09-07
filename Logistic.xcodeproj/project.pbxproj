@@ -13,6 +13,8 @@
 		C80CE94C2C8218110002D5D4 /* ChatDriverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80CE94B2C8218110002D5D4 /* ChatDriverView.swift */; };
 		C80CE94E2C82181E0002D5D4 /* ChatAdminView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80CE94D2C82181E0002D5D4 /* ChatAdminView.swift */; };
 		C80CE9502C82183A0002D5D4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C80CE94F2C82183A0002D5D4 /* GoogleService-Info.plist */; };
+		C80CE9542C8B2ACF0002D5D4 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = C80CE9532C8B2ACF0002D5D4 /* FirebaseMessaging */; };
+		C80CE9562C8C84620002D5D4 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80CE9552C8C84620002D5D4 /* CustomTextField.swift */; };
 		C82DC3E12C3A9915004CE6C8 /* AddressAutocompleteTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C82DC3E02C3A9915004CE6C8 /* AddressAutocompleteTextField.swift */; };
 		C87D71762C49450E00BCF2C9 /* ZoomControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C87D71752C49450E00BCF2C9 /* ZoomControlsView.swift */; };
 		C87D9C432BF65E2A003354F2 /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C87D9C422BF65E2A003354F2 /* AlertManager.swift */; };
@@ -73,6 +75,7 @@
 		C80CE94B2C8218110002D5D4 /* ChatDriverView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatDriverView.swift; path = "Logistic/View/Chat&MessageView/ChatDriverView.swift"; sourceTree = SOURCE_ROOT; };
 		C80CE94D2C82181E0002D5D4 /* ChatAdminView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatAdminView.swift; path = "Logistic/View/Chat&MessageView/ChatAdminView.swift"; sourceTree = SOURCE_ROOT; };
 		C80CE94F2C82183A0002D5D4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		C80CE9552C8C84620002D5D4 /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
 		C82DC3E02C3A9915004CE6C8 /* AddressAutocompleteTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressAutocompleteTextField.swift; sourceTree = "<group>"; };
 		C87D71752C49450E00BCF2C9 /* ZoomControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomControlsView.swift; sourceTree = "<group>"; };
 		C87D9C422BF65E2A003354F2 /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
@@ -112,6 +115,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C80CE9542C8B2ACF0002D5D4 /* FirebaseMessaging in Frameworks */,
 				C88F35A32BB44C6700B177F0 /* FirebaseDatabase in Frameworks */,
 				C88F35A52BB44C6700B177F0 /* FirebaseFirestore in Frameworks */,
 				C88F359F2BB44C6700B177F0 /* FirebaseAnalytics in Frameworks */,
@@ -210,6 +214,7 @@
 				C803D8442BB49FA500086411 /* View */,
 				C88F35732BB44B7E00B177F0 /* LogisticApp.swift */,
 				C8EAF8D62C755DCF008659F5 /* UserProfileView.swift */,
+				C80CE9552C8C84620002D5D4 /* CustomTextField.swift */,
 				C87D9C422BF65E2A003354F2 /* AlertManager.swift */,
 				C8F5AC6A2C3AF86100420675 /* FirebaseModel.swift */,
 				C87D71752C49450E00BCF2C9 /* ZoomControlsView.swift */,
@@ -275,6 +280,7 @@
 				C88F35A22BB44C6700B177F0 /* FirebaseDatabase */,
 				C88F35A42BB44C6700B177F0 /* FirebaseFirestore */,
 				C88F35A62BB44C6700B177F0 /* FirebaseStorage */,
+				C80CE9532C8B2ACF0002D5D4 /* FirebaseMessaging */,
 			);
 			productName = Logistic;
 			productReference = C88F35702BB44B7E00B177F0 /* Logistic.app */;
@@ -417,6 +423,7 @@
 				C8BA55AA2C7D1A37009C152A /* FindListView.swift in Sources */,
 				C8BA55A82C7D1A06009C152A /* FindOrderView.swift in Sources */,
 				C8BA55AE2C7D1A62009C152A /* ActiveOrders.swift in Sources */,
+				C80CE9562C8C84620002D5D4 /* CustomTextField.swift in Sources */,
 				C80CE94C2C8218110002D5D4 /* ChatDriverView.swift in Sources */,
 				C803D8562BB4B5BC00086411 /* DriverTabView.swift in Sources */,
 				C8F5CF022C397472003E2E40 /* DaDataService.swift in Sources */,
@@ -769,6 +776,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		C80CE9532C8B2ACF0002D5D4 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C88F359D2BB44C6700B177F0 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
 		C88F359E2BB44C6700B177F0 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C88F359D2BB44C6700B177F0 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

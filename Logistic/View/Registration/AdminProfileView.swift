@@ -154,6 +154,11 @@ struct AdminProfileView: View {
             if let error = error {
                 print("Ошибка при сохранении профиля: \(error.localizedDescription)")
             } else {
+                // Сохранение статуса авторизации и роли в UserDefaults
+                UserDefaults.standard.set(true, forKey: "isLogged")
+                UserDefaults.standard.set(userID, forKey: "userId")
+                UserDefaults.standard.set("admin", forKey: "userRole")
+                
                 profileSaved = true
                 navigateToAdminTab = true
                 presentationMode.wrappedValue.dismiss()
