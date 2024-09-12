@@ -9,7 +9,7 @@ struct ContentView: View {
     @State private var selectedRole: String = ""
     @State private var selectedView: AnyView? // Добавляем свойство для хранения выбранного представления
     @State private var showResetPassword = false // Для управления показом экрана сброса пароля
-    
+
     var body: some View {
         NavigationView {
             if isLogged {
@@ -26,15 +26,15 @@ struct ContentView: View {
                         .font(.largeTitle)
                         .fontWeight(.bold)
                         .padding(.bottom, 20)
-                    
+
                     TextField("Почта", text: $email)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .padding(.horizontal)
-                    
+
                     SecureField("Пароль", text: $password)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .padding(.horizontal)
-                    
+
                     // Кнопка для входа
                     Button(action: {
                         signIn()
@@ -48,7 +48,7 @@ struct ContentView: View {
                             .cornerRadius(10)
                     }
                     .padding(.horizontal)
-                    
+
                     // Кнопка для регистрации
                     NavigationLink(destination: RegisterView(selectedRole: $selectedRole)) {
                         Text("Регистрация")
@@ -56,7 +56,7 @@ struct ContentView: View {
                             .foregroundColor(.blue)
                     }
                     .padding(.top, 10)
-                    
+
                     // Кнопка для сброса пароля
                     Button(action: {
                         showResetPassword = true
@@ -66,7 +66,7 @@ struct ContentView: View {
                             .foregroundColor(.blue)
                             .padding(.top, 5)
                     }
-                    
+
                     // Переход на экран сброса пароля
                     NavigationLink(destination: ResetPasswordView(), isActive: $showResetPassword) {
                         EmptyView()
@@ -80,14 +80,14 @@ struct ContentView: View {
             checkIfLogged()
         }
     }
-    
+
     // Проверка статуса авторизации при запуске
     func checkIfLogged() {
         if UserDefaults.standard.bool(forKey: "isLogged") {
             self.isLogged = true
             let userId = UserDefaults.standard.string(forKey: "userId") ?? ""
             let role = UserDefaults.standard.string(forKey: "userRole") ?? ""
-            
+
             if role == "admin" {
                 self.selectedView = AnyView(AdminTabView(userID: userId))
             } else if role == "driver" {
@@ -95,7 +95,7 @@ struct ContentView: View {
             }
         }
     }
-    
+
     // Функция для входа
     func signIn() {
         Auth.auth().signIn(withEmail: email, password: password) { result, error in
@@ -108,21 +108,21 @@ struct ContentView: View {
                 }
                 let userId = user.uid
                 print("UID текущего пользователя: \(userId)")
-                
+
                 let db = Firestore.firestore()
                 let adminProfileRef = db.collection("AdminProfiles").document(userId)
                 let driverProfileRef = db.collection("DriverProfiles").document(userId)
-                
+
                 adminProfileRef.getDocument { adminDocument, adminError in
                     if let adminDocument = adminDocument, adminDocument.exists {
                         self.userRole = "admin"
                         print("Роль пользователя: админ")
-                        
+
                         // Сохраняем данные в UserDefaults
                         UserDefaults.standard.set(true, forKey: "isLogged")
                         UserDefaults.standard.set(userId, forKey: "userId")
                         UserDefaults.standard.set("admin", forKey: "userRole")
-                        
+
                         // Устанавливаем выбранное представление в AdminTabView
                         DispatchQueue.main.async {
                             self.isLogged = true
@@ -134,12 +134,12 @@ struct ContentView: View {
                             if let driverDocument = driverDocument, driverDocument.exists {
                                 self.userRole = "driver"
                                 print("Роль пользователя: водитель")
-                                
+
                                 // Сохраняем данные в UserDefaults
                                 UserDefaults.standard.set(true, forKey: "isLogged")
                                 UserDefaults.standard.set(userId, forKey: "userId")
                                 UserDefaults.standard.set("driver", forKey: "userRole")
-                                
+
                                 // Устанавливаем выбранное представление в DriverTabView
                                 DispatchQueue.main.async {
                                     self.isLogged = true

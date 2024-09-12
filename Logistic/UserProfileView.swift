@@ -89,6 +89,17 @@ struct UserProfileView: View {
                     }
                     .padding()
                 }
+                Button(action: {
+                    signOut()
+                }) {
+                    Text("Выйти")
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.red)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                }
+                .padding()
             }
         }
         .onAppear {
@@ -96,6 +107,23 @@ struct UserProfileView: View {
         }
     }
 
+    func signOut() {
+        do {
+            try Auth.auth().signOut()
+            UserDefaults.standard.set(false, forKey: "isLogged")
+            UserDefaults.standard.removeObject(forKey: "userId")
+            UserDefaults.standard.removeObject(forKey: "userRole")
+            // Перенаправляем на экран входа
+            // Используем `UIApplication` для того, чтобы обновить корневой контроллер
+            if let window = UIApplication.shared.windows.first {
+                window.rootViewController = UIHostingController(rootView: ContentView())
+                window.makeKeyAndVisible()
+            }
+        } catch let signOutError as NSError {
+            print("Ошибка разлогина: %@", signOutError.localizedDescription)
+        }
+    }
+    
     var profileEditingView: some View {
         VStack(alignment: .leading, spacing: 15) {
             profileField(title: "Почта", value: email, editable: false)
@@ -180,6 +208,7 @@ struct UserProfileView: View {
             )
         }
     }
+    
 
     var profileViewingView: some View {
         VStack(alignment: .leading, spacing: 15) {
