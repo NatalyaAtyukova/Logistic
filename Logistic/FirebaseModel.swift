@@ -11,6 +11,8 @@ import FirebaseFirestore
 import MapKit
 import CoreLocation
 
+
+
 struct OrderItem: Identifiable, Codable {
     var id: String
     var adminID: String
@@ -51,13 +53,23 @@ struct ChatInfo: Identifiable, Codable {
 
 // Структура для представления местоположения водителя
 struct DriverLocation: Identifiable, Codable {
-    var id: String?
+    var id: String? // ID документа из Firestore
     var driverID: String // ID водителя
     var latitude: Double
     var longitude: Double
-    var timestamp: Timestamp
-
+    var timestamp: Timestamp // Поле с типом Firestore.Timestamp
+    
+    // Форматированный вывод времени из timestamp
     var formattedTimestamp: String {
         formatDate(timestamp.dateValue())
     }
+
+    // Преобразование даты в строку
+    private func formatDate(_ date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .short
+        return dateFormatter.string(from: date)
+    }
+    
 }

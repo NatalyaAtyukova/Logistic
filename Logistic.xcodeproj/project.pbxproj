@@ -14,8 +14,19 @@
 		C80CE94E2C82181E0002D5D4 /* ChatAdminView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80CE94D2C82181E0002D5D4 /* ChatAdminView.swift */; };
 		C80CE9502C82183A0002D5D4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C80CE94F2C82183A0002D5D4 /* GoogleService-Info.plist */; };
 		C80CE9542C8B2ACF0002D5D4 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = C80CE9532C8B2ACF0002D5D4 /* FirebaseMessaging */; };
-		C80CE9562C8C84620002D5D4 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80CE9552C8C84620002D5D4 /* CustomTextField.swift */; };
 		C82DC3E12C3A9915004CE6C8 /* AddressAutocompleteTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C82DC3E02C3A9915004CE6C8 /* AddressAutocompleteTextField.swift */; };
+		C84074492C98D4A0009D2427 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C84074462C98D4A0009D2427 /* CustomTextField.swift */; };
+		C840744A2C98D4A0009D2427 /* UserProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C84074472C98D4A0009D2427 /* UserProfileView.swift */; };
+		C87C9D1C2C94D3C80020D8D4 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C87C9D1B2C94D3C80020D8D4 /* AuthViewModel.swift */; };
+		C87C9D1E2C94D47E0020D8D4 /* RegisterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C87C9D1D2C94D47E0020D8D4 /* RegisterViewModel.swift */; };
+		C87C9D202C94D84E0020D8D4 /* ResetPasswordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C87C9D1F2C94D84E0020D8D4 /* ResetPasswordViewModel.swift */; };
+		C87C9D232C94D92F0020D8D4 /* AdminProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C87C9D222C94D92F0020D8D4 /* AdminProfileViewModel.swift */; };
+		C87C9D252C94D9920020D8D4 /* DriverProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C87C9D242C94D9920020D8D4 /* DriverProfileViewModel.swift */; };
+		C87C9D272C94DB7B0020D8D4 /* AddOrderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C87C9D262C94DB7B0020D8D4 /* AddOrderViewModel.swift */; };
+		C87C9D292C94DE760020D8D4 /* EditOrderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C87C9D282C94DE760020D8D4 /* EditOrderViewModel.swift */; };
+		C87C9D2B2C94DF4B0020D8D4 /* MapAdminViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C87C9D2A2C94DF4B0020D8D4 /* MapAdminViewModel.swift */; };
+		C87C9D2D2C94E1500020D8D4 /* OrdersListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C87C9D2C2C94E1500020D8D4 /* OrdersListViewModel.swift */; };
+		C87C9D2F2C94E1A70020D8D4 /* AdminTabViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C87C9D2E2C94E1A70020D8D4 /* AdminTabViewModel.swift */; };
 		C87D71762C49450E00BCF2C9 /* ZoomControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C87D71752C49450E00BCF2C9 /* ZoomControlsView.swift */; };
 		C87D9C432BF65E2A003354F2 /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C87D9C422BF65E2A003354F2 /* AlertManager.swift */; };
 		C88CD1DD2C553C05000E9317 /* CityAutocompleteTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C88CD1DC2C553C05000E9317 /* CityAutocompleteTextField.swift */; };
@@ -39,13 +50,19 @@
 		C8BA55A82C7D1A06009C152A /* FindOrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BA55A72C7D1A06009C152A /* FindOrderView.swift */; };
 		C8BA55AA2C7D1A37009C152A /* FindListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BA55A92C7D1A36009C152A /* FindListView.swift */; };
 		C8BA55AE2C7D1A62009C152A /* ActiveOrders.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BA55AD2C7D1A62009C152A /* ActiveOrders.swift */; };
-		C8BA55B02C7D1A99009C152A /* OrderRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BA55AF2C7D1A99009C152A /* OrderRow.swift */; };
 		C8BA55B22C7D1ABF009C152A /* MapViewWithOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BA55B12C7D1ABF009C152A /* MapViewWithOrder.swift */; };
 		C8BA55B62C7D1AF7009C152A /* MapViewWithRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BA55B52C7D1AF7009C152A /* MapViewWithRoute.swift */; };
 		C8BA55B82C7E6E3C009C152A /* ChatCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BA55B72C7E6E3C009C152A /* ChatCard.swift */; };
 		C8BA55BA2C7E6EE8009C152A /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BA55B92C7E6EE8009C152A /* MessageView.swift */; };
+		C8C29B932C95BC3800BE788F /* DriverTabViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8C29B922C95BC3800BE788F /* DriverTabViewModel.swift */; };
+		C8C29B952C95BC7F00BE788F /* ActiveOrdersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8C29B942C95BC7F00BE788F /* ActiveOrdersViewModel.swift */; };
+		C8C29B972C95BCBE00BE788F /* FindOrderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8C29B962C95BCBE00BE788F /* FindOrderViewModel.swift */; };
+		C8C29B992C95BF1700BE788F /* FindListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8C29B982C95BF1700BE788F /* FindListViewModel.swift */; };
+		C8C29B9B2C95C06900BE788F /* MapViewWithOrderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8C29B9A2C95C06900BE788F /* MapViewWithOrderViewModel.swift */; };
+		C8C29B9D2C95C26600BE788F /* MapViewWithRouteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8C29B9C2C95C26600BE788F /* MapViewWithRouteViewModel.swift */; };
+		C8C29B9F2C95C2C600BE788F /* LocationManagerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8C29B9E2C95C2C600BE788F /* LocationManagerViewModel.swift */; };
+		C8C29BA12C95C5E000BE788F /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8C29BA02C95C5E000BE788F /* LocationManager.swift */; };
 		C8EAF8D52C755780008659F5 /* ResetPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8EAF8D42C755780008659F5 /* ResetPasswordView.swift */; };
-		C8EAF8D72C755DCF008659F5 /* UserProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8EAF8D62C755DCF008659F5 /* UserProfileView.swift */; };
 		C8F5AC6B2C3AF86100420675 /* FirebaseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8F5AC6A2C3AF86100420675 /* FirebaseModel.swift */; };
 		C8F5CF022C397472003E2E40 /* DaDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8F5CF012C397472003E2E40 /* DaDataService.swift */; };
 		C8F5CF042C39750F003E2E40 /* SuggestionsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8F5CF032C39750F003E2E40 /* SuggestionsListView.swift */; };
@@ -75,8 +92,19 @@
 		C80CE94B2C8218110002D5D4 /* ChatDriverView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatDriverView.swift; path = "Logistic/View/Chat&MessageView/ChatDriverView.swift"; sourceTree = SOURCE_ROOT; };
 		C80CE94D2C82181E0002D5D4 /* ChatAdminView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatAdminView.swift; path = "Logistic/View/Chat&MessageView/ChatAdminView.swift"; sourceTree = SOURCE_ROOT; };
 		C80CE94F2C82183A0002D5D4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
-		C80CE9552C8C84620002D5D4 /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
 		C82DC3E02C3A9915004CE6C8 /* AddressAutocompleteTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressAutocompleteTextField.swift; sourceTree = "<group>"; };
+		C84074462C98D4A0009D2427 /* CustomTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
+		C84074472C98D4A0009D2427 /* UserProfileView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserProfileView.swift; sourceTree = "<group>"; };
+		C87C9D1B2C94D3C80020D8D4 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
+		C87C9D1D2C94D47E0020D8D4 /* RegisterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewModel.swift; sourceTree = "<group>"; };
+		C87C9D1F2C94D84E0020D8D4 /* ResetPasswordViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordViewModel.swift; sourceTree = "<group>"; };
+		C87C9D222C94D92F0020D8D4 /* AdminProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminProfileViewModel.swift; sourceTree = "<group>"; };
+		C87C9D242C94D9920020D8D4 /* DriverProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriverProfileViewModel.swift; sourceTree = "<group>"; };
+		C87C9D262C94DB7B0020D8D4 /* AddOrderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddOrderViewModel.swift; sourceTree = "<group>"; };
+		C87C9D282C94DE760020D8D4 /* EditOrderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditOrderViewModel.swift; sourceTree = "<group>"; };
+		C87C9D2A2C94DF4B0020D8D4 /* MapAdminViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapAdminViewModel.swift; sourceTree = "<group>"; };
+		C87C9D2C2C94E1500020D8D4 /* OrdersListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrdersListViewModel.swift; sourceTree = "<group>"; };
+		C87C9D2E2C94E1A70020D8D4 /* AdminTabViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminTabViewModel.swift; sourceTree = "<group>"; };
 		C87D71752C49450E00BCF2C9 /* ZoomControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomControlsView.swift; sourceTree = "<group>"; };
 		C87D9C422BF65E2A003354F2 /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
 		C88CD1DC2C553C05000E9317 /* CityAutocompleteTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityAutocompleteTextField.swift; sourceTree = "<group>"; };
@@ -98,13 +126,19 @@
 		C8BA55A72C7D1A06009C152A /* FindOrderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindOrderView.swift; sourceTree = "<group>"; };
 		C8BA55A92C7D1A36009C152A /* FindListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindListView.swift; sourceTree = "<group>"; };
 		C8BA55AD2C7D1A62009C152A /* ActiveOrders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveOrders.swift; sourceTree = "<group>"; };
-		C8BA55AF2C7D1A99009C152A /* OrderRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderRow.swift; sourceTree = "<group>"; };
 		C8BA55B12C7D1ABF009C152A /* MapViewWithOrder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewWithOrder.swift; sourceTree = "<group>"; };
 		C8BA55B52C7D1AF7009C152A /* MapViewWithRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewWithRoute.swift; sourceTree = "<group>"; };
 		C8BA55B72C7E6E3C009C152A /* ChatCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCard.swift; sourceTree = "<group>"; };
 		C8BA55B92C7E6EE8009C152A /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
+		C8C29B922C95BC3800BE788F /* DriverTabViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriverTabViewModel.swift; sourceTree = "<group>"; };
+		C8C29B942C95BC7F00BE788F /* ActiveOrdersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveOrdersViewModel.swift; sourceTree = "<group>"; };
+		C8C29B962C95BCBE00BE788F /* FindOrderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindOrderViewModel.swift; sourceTree = "<group>"; };
+		C8C29B982C95BF1700BE788F /* FindListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindListViewModel.swift; sourceTree = "<group>"; };
+		C8C29B9A2C95C06900BE788F /* MapViewWithOrderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewWithOrderViewModel.swift; sourceTree = "<group>"; };
+		C8C29B9C2C95C26600BE788F /* MapViewWithRouteViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewWithRouteViewModel.swift; sourceTree = "<group>"; };
+		C8C29B9E2C95C2C600BE788F /* LocationManagerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManagerViewModel.swift; sourceTree = "<group>"; };
+		C8C29BA02C95C5E000BE788F /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		C8EAF8D42C755780008659F5 /* ResetPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordView.swift; sourceTree = "<group>"; };
-		C8EAF8D62C755DCF008659F5 /* UserProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileView.swift; sourceTree = "<group>"; };
 		C8F5AC6A2C3AF86100420675 /* FirebaseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseModel.swift; sourceTree = "<group>"; };
 		C8F5CF012C397472003E2E40 /* DaDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaDataService.swift; sourceTree = "<group>"; };
 		C8F5CF032C39750F003E2E40 /* SuggestionsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionsListView.swift; sourceTree = "<group>"; };
@@ -144,8 +178,9 @@
 		C803D8442BB49FA500086411 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				C8BA55A62C7D187C009C152A /* Registration */,
 				C8A4A83B2BC04DF900164865 /* Chat&MessageView */,
+				C84074482C98D4A0009D2427 /* UserProfileView */,
+				C8BA55A62C7D187C009C152A /* RegistrationView */,
 				C803D8452BB4A15900086411 /* AdminView */,
 				C803D8462BB4A17000086411 /* DriverView */,
 			);
@@ -158,8 +193,8 @@
 				C803D84B2BB4B2A100086411 /* AdminTabView.swift */,
 				C8BA559E2C7D1780009C152A /* AddOrderView.swift */,
 				C8BA55A02C7D17DC009C152A /* EditOrderView.swift */,
-				C8BA55A42C7D1832009C152A /* MapAdminView.swift */,
 				C8BA559C2C7D1595009C152A /* OrdersListView.swift */,
+				C8BA55A42C7D1832009C152A /* MapAdminView.swift */,
 			);
 			path = AdminView;
 			sourceTree = "<group>";
@@ -173,7 +208,7 @@
 				C8BA55A92C7D1A36009C152A /* FindListView.swift */,
 				C8BA55B12C7D1ABF009C152A /* MapViewWithOrder.swift */,
 				C8BA55B52C7D1AF7009C152A /* MapViewWithRoute.swift */,
-				C8BA55AF2C7D1A99009C152A /* OrderRow.swift */,
+				C8C29BA02C95C5E000BE788F /* LocationManager.swift */,
 			);
 			path = DriverView;
 			sourceTree = "<group>";
@@ -187,6 +222,49 @@
 				C88CD1DC2C553C05000E9317 /* CityAutocompleteTextField.swift */,
 			);
 			path = DaDataAddress;
+			sourceTree = "<group>";
+		};
+		C84074482C98D4A0009D2427 /* UserProfileView */ = {
+			isa = PBXGroup;
+			children = (
+				C84074462C98D4A0009D2427 /* CustomTextField.swift */,
+				C84074472C98D4A0009D2427 /* UserProfileView.swift */,
+			);
+			path = UserProfileView;
+			sourceTree = "<group>";
+		};
+		C87C9D212C94D8EA0020D8D4 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				C87C9D312C94EA930020D8D4 /* AdminViewModel */,
+				C896DA862C98D3A7003340C2 /* DriverViewModel */,
+				C87C9D302C94EA760020D8D4 /* RegistrationViewModel */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		C87C9D302C94EA760020D8D4 /* RegistrationViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				C87C9D1B2C94D3C80020D8D4 /* AuthViewModel.swift */,
+				C87C9D1D2C94D47E0020D8D4 /* RegisterViewModel.swift */,
+				C87C9D1F2C94D84E0020D8D4 /* ResetPasswordViewModel.swift */,
+				C87C9D222C94D92F0020D8D4 /* AdminProfileViewModel.swift */,
+				C87C9D242C94D9920020D8D4 /* DriverProfileViewModel.swift */,
+			);
+			path = RegistrationViewModel;
+			sourceTree = "<group>";
+		};
+		C87C9D312C94EA930020D8D4 /* AdminViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				C87C9D2E2C94E1A70020D8D4 /* AdminTabViewModel.swift */,
+				C87C9D262C94DB7B0020D8D4 /* AddOrderViewModel.swift */,
+				C87C9D282C94DE760020D8D4 /* EditOrderViewModel.swift */,
+				C87C9D2A2C94DF4B0020D8D4 /* MapAdminViewModel.swift */,
+				C87C9D2C2C94E1500020D8D4 /* OrdersListViewModel.swift */,
+			);
+			path = AdminViewModel;
 			sourceTree = "<group>";
 		};
 		C88F35672BB44B7E00B177F0 = {
@@ -211,14 +289,13 @@
 		C88F35722BB44B7E00B177F0 /* Logistic */ = {
 			isa = PBXGroup;
 			children = (
+				C87C9D212C94D8EA0020D8D4 /* ViewModel */,
 				C803D8442BB49FA500086411 /* View */,
-				C88F35732BB44B7E00B177F0 /* LogisticApp.swift */,
-				C8EAF8D62C755DCF008659F5 /* UserProfileView.swift */,
-				C80CE9552C8C84620002D5D4 /* CustomTextField.swift */,
 				C87D9C422BF65E2A003354F2 /* AlertManager.swift */,
 				C8F5AC6A2C3AF86100420675 /* FirebaseModel.swift */,
-				C87D71752C49450E00BCF2C9 /* ZoomControlsView.swift */,
 				C8BA16A62C73752400DBF4DD /* Validation.swift */,
+				C87D71752C49450E00BCF2C9 /* ZoomControlsView.swift */,
+				C88F35732BB44B7E00B177F0 /* LogisticApp.swift */,
 				C82DC3E22C3AA1E2004CE6C8 /* DaDataAddress */,
 				C88F35772BB44B8100B177F0 /* Assets.xcassets */,
 				C88F35792BB44B8100B177F0 /* Preview Content */,
@@ -234,6 +311,20 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		C896DA862C98D3A7003340C2 /* DriverViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				C8C29B942C95BC7F00BE788F /* ActiveOrdersViewModel.swift */,
+				C8C29B922C95BC3800BE788F /* DriverTabViewModel.swift */,
+				C8C29B962C95BCBE00BE788F /* FindOrderViewModel.swift */,
+				C8C29B982C95BF1700BE788F /* FindListViewModel.swift */,
+				C8C29B9E2C95C2C600BE788F /* LocationManagerViewModel.swift */,
+				C8C29B9A2C95C06900BE788F /* MapViewWithOrderViewModel.swift */,
+				C8C29B9C2C95C26600BE788F /* MapViewWithRouteViewModel.swift */,
+			);
+			path = DriverViewModel;
+			sourceTree = "<group>";
+		};
 		C8A4A83B2BC04DF900164865 /* Chat&MessageView */ = {
 			isa = PBXGroup;
 			children = (
@@ -246,7 +337,7 @@
 			path = "Chat&MessageView";
 			sourceTree = "<group>";
 		};
-		C8BA55A62C7D187C009C152A /* Registration */ = {
+		C8BA55A62C7D187C009C152A /* RegistrationView */ = {
 			isa = PBXGroup;
 			children = (
 				C88F35752BB44B7E00B177F0 /* ContentView.swift */,
@@ -255,7 +346,7 @@
 				C803D8472BB4A86E00086411 /* AdminProfileView.swift */,
 				C88F35B22BB45A5200B177F0 /* DriverProfileView.swift */,
 			);
-			path = Registration;
+			path = RegistrationView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -401,36 +492,53 @@
 			buildActionMask = 2147483647;
 			files = (
 				C88F35B32BB45A5200B177F0 /* DriverProfileView.swift in Sources */,
-				C8EAF8D72C755DCF008659F5 /* UserProfileView.swift in Sources */,
 				C803D8482BB4A86E00086411 /* AdminProfileView.swift in Sources */,
 				C8F5CF042C39750F003E2E40 /* SuggestionsListView.swift in Sources */,
 				C8BA55B82C7E6E3C009C152A /* ChatCard.swift in Sources */,
 				C82DC3E12C3A9915004CE6C8 /* AddressAutocompleteTextField.swift in Sources */,
+				C8C29B932C95BC3800BE788F /* DriverTabViewModel.swift in Sources */,
 				C87D9C432BF65E2A003354F2 /* AlertManager.swift in Sources */,
 				C8BA55B22C7D1ABF009C152A /* MapViewWithOrder.swift in Sources */,
-				C8BA55B02C7D1A99009C152A /* OrderRow.swift in Sources */,
 				C88F35B12BB4550900B177F0 /* RegisterView.swift in Sources */,
+				C8C29B9D2C95C26600BE788F /* MapViewWithRouteViewModel.swift in Sources */,
 				C8BA16A72C73752400DBF4DD /* Validation.swift in Sources */,
 				C8F5AC6B2C3AF86100420675 /* FirebaseModel.swift in Sources */,
 				C8BA55BA2C7E6EE8009C152A /* MessageView.swift in Sources */,
 				C8BA559F2C7D1780009C152A /* AddOrderView.swift in Sources */,
+				C8C29B992C95BF1700BE788F /* FindListViewModel.swift in Sources */,
+				C840744A2C98D4A0009D2427 /* UserProfileView.swift in Sources */,
 				C87D71762C49450E00BCF2C9 /* ZoomControlsView.swift in Sources */,
+				C87C9D232C94D92F0020D8D4 /* AdminProfileViewModel.swift in Sources */,
 				C8BA55B62C7D1AF7009C152A /* MapViewWithRoute.swift in Sources */,
+				C87C9D1E2C94D47E0020D8D4 /* RegisterViewModel.swift in Sources */,
+				C87C9D2F2C94E1A70020D8D4 /* AdminTabViewModel.swift in Sources */,
 				C88CD1DD2C553C05000E9317 /* CityAutocompleteTextField.swift in Sources */,
+				C8C29B9F2C95C2C600BE788F /* LocationManagerViewModel.swift in Sources */,
 				C8BA55A12C7D17DC009C152A /* EditOrderView.swift in Sources */,
 				C80CE94E2C82181E0002D5D4 /* ChatAdminView.swift in Sources */,
 				C8BA55A52C7D1832009C152A /* MapAdminView.swift in Sources */,
 				C8BA55AA2C7D1A37009C152A /* FindListView.swift in Sources */,
 				C8BA55A82C7D1A06009C152A /* FindOrderView.swift in Sources */,
+				C8C29B972C95BCBE00BE788F /* FindOrderViewModel.swift in Sources */,
 				C8BA55AE2C7D1A62009C152A /* ActiveOrders.swift in Sources */,
-				C80CE9562C8C84620002D5D4 /* CustomTextField.swift in Sources */,
+				C87C9D292C94DE760020D8D4 /* EditOrderViewModel.swift in Sources */,
+				C87C9D2D2C94E1500020D8D4 /* OrdersListViewModel.swift in Sources */,
+				C87C9D1C2C94D3C80020D8D4 /* AuthViewModel.swift in Sources */,
+				C8C29BA12C95C5E000BE788F /* LocationManager.swift in Sources */,
+				C8C29B952C95BC7F00BE788F /* ActiveOrdersViewModel.swift in Sources */,
 				C80CE94C2C8218110002D5D4 /* ChatDriverView.swift in Sources */,
+				C84074492C98D4A0009D2427 /* CustomTextField.swift in Sources */,
+				C87C9D2B2C94DF4B0020D8D4 /* MapAdminViewModel.swift in Sources */,
 				C803D8562BB4B5BC00086411 /* DriverTabView.swift in Sources */,
 				C8F5CF022C397472003E2E40 /* DaDataService.swift in Sources */,
+				C87C9D252C94D9920020D8D4 /* DriverProfileViewModel.swift in Sources */,
+				C8C29B9B2C95C06900BE788F /* MapViewWithOrderViewModel.swift in Sources */,
+				C87C9D202C94D84E0020D8D4 /* ResetPasswordViewModel.swift in Sources */,
 				C8A4A8382BC04CC600164865 /* ChatView.swift in Sources */,
 				C88F35762BB44B7E00B177F0 /* ContentView.swift in Sources */,
 				C8BA559D2C7D1595009C152A /* OrdersListView.swift in Sources */,
 				C88F35742BB44B7E00B177F0 /* LogisticApp.swift in Sources */,
+				C87C9D272C94DB7B0020D8D4 /* AddOrderViewModel.swift in Sources */,
 				C803D84C2BB4B2A100086411 /* AdminTabView.swift in Sources */,
 				C8EAF8D52C755780008659F5 /* ResetPasswordView.swift in Sources */,
 			);

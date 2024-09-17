@@ -1,56 +1,52 @@
 import SwiftUI
-import Firebase
-import FirebaseFirestore
 import MapKit
-import CoreLocation
 
 struct AdminTabView: View {
+    @StateObject private var viewModel = AdminTabViewModel()
     @StateObject private var alertManager = AlertManager()
-    @StateObject private var locationManager = LocationManager()
-    @State private var driverLocations: [DriverLocation] = []
-    @State private var currentOrder: OrderItem?
-    @State private var region: MKCoordinateRegion = MKCoordinateRegion(
-        center: CLLocationCoordinate2D(latitude: 0, longitude: 0),
-        span: MKCoordinateSpan(latitudeDelta: 5.0, longitudeDelta: 5.0)
-    )
-    @State private var isInitialRegionSet: Bool = false
+    @ObservedObject private var locationManager = LocationManager()  // Используем @ObservedObject вместо @StateObject
     
+    @State private var selectedTab: Int = 0 // Добавляем переменную для отслеживания активной вкладки
+
     let userID: String
-    
+
     var body: some View {
-        TabView {
+        TabView(selection: $selectedTab) { // Управляем вкладками через selectedTab
             NavigationView {
-                OrdersListView(selectedOrder: $currentOrder, alertManager: alertManager)
+                OrdersListView(selectedOrder: $viewModel.currentOrder, selectedTab: $selectedTab, alertManager: alertManager)
                     .navigationTitle("Список заказов")
                     .navigationBarTitleDisplayMode(.inline)
-                    .background(Color(.systemGroupedBackground)) // Фон для списка
+                    .background(Color(.systemGroupedBackground))
             }
             .tabItem {
                 Image(systemName: "list.bullet")
                 Text("Список заказов")
             }
+            .tag(0) // Указываем тег для отслеживания текущей вкладки
 
             AddOrderView(alertManager: alertManager)
                 .tabItem {
                     Image(systemName: "plus.circle.fill")
                     Text("Добавить заказ")
                 }
+                .tag(1)
 
-            if let order = currentOrder {
+            if let order = viewModel.currentOrder {
                 VStack(spacing: 0) {
                     ZStack(alignment: .topTrailing) {
-                        MapAdminView(driverLocations: $driverLocations, order: order, region: $region, isInitialRegionSet: $isInitialRegionSet)
-                            .edgesIgnoringSafeArea(.all) // Позволяет карте занимать весь экран
-                            .shadow(radius: 10) // Добавляем тень
+                        // Передаем объект viewModel в MapAdminView
+                        MapAdminView(viewModel: viewModel.mapAdminViewModel, order: order)
+                            .edgesIgnoringSafeArea(.all)
+                            .shadow(radius: 10)
                         
                         VStack {
-                            ZoomControlsView(zoomIn: zoomIn, zoomOut: zoomOut)
+                            // Используем методы зума из viewModel
+                            ZoomControlsView(zoomIn: viewModel.zoomIn, zoomOut: viewModel.zoomOut)
                                 .padding(.top, 50)
                                 .padding(.trailing, 10)
                         }
                     }
 
-                    // Информация о заказе с улучшенным стилем
                     Text("Заказ №\(order.id)")
                         .font(.title2)
                         .fontWeight(.semibold)
@@ -65,8 +61,9 @@ struct AdminTabView: View {
                     Image(systemName: "map.fill")
                     Text("Карта")
                 }
+                .tag(2) // Тег для вкладки карты
                 .onAppear {
-                    centerMapOnOrder(order)
+                    viewModel.centerMapOnOrder(order) // Центрирование карты на заказе
                 }
             } else {
                 VStack {
@@ -80,6 +77,7 @@ struct AdminTabView: View {
                     Image(systemName: "map")
                     Text("Карта")
                 }
+                .tag(2) // Тег для вкладки карты
             }
 
             ChatAdminView()
@@ -87,93 +85,19 @@ struct AdminTabView: View {
                     Image(systemName: "message.fill")
                     Text("Чат")
                 }
+                .tag(3)
 
             UserProfileView(userID: userID, role: "admin")
                 .tabItem {
                     Label("Профиль", systemImage: "person.crop.circle.fill")
                 }
+                .tag(4)
         }
-        .accentColor(.blue) // Основной цвет иконок
-        .navigationBarTitle("Панель организации")
+        .accentColor(.blue)
         .onAppear {
-            locationManager.requestLocationPermission()
-            locationManager.startUpdatingLocation()
-            fetchDriverLocations()
+            locationManager.requestLocationPermission() // Запрос разрешений на геолокацию
+            locationManager.startUpdatingLocation() // Начало обновления геопозиции
+            viewModel.fetchDriverLocations() // Получение данных о местоположении водителей
         }
     }
-
-    // Функции для зума карты
-    private func zoomIn() {
-        let span = MKCoordinateSpan(latitudeDelta: region.span.latitudeDelta / 2, longitudeDelta: region.span.longitudeDelta / 2)
-        region.span = span
-    }
-
-    private func zoomOut() {
-        let span = MKCoordinateSpan(latitudeDelta: region.span.latitudeDelta * 2, longitudeDelta: region.span.longitudeDelta * 2)
-        region.span = span
-    }
-
-    // Центрирование карты на заказе
-    private func centerMapOnOrder(_ order: OrderItem) {
-        var minLat = min(order.senderLatitude, order.recipientLatitude)
-        var maxLat = max(order.senderLatitude, order.recipientLatitude)
-        var minLon = min(order.senderLongitude, order.recipientLongitude)
-        var maxLon = max(order.senderLongitude, order.recipientLongitude)
-
-        for driverLocation in driverLocations {
-            minLat = min(minLat, driverLocation.latitude)
-            maxLat = max(maxLat, driverLocation.latitude)
-            minLon = min(minLon, driverLocation.longitude)
-            maxLon = max(maxLon, driverLocation.longitude)
-        }
-
-        let centerLat = (minLat + maxLat) / 2
-        let centerLon = (minLon + maxLon) / 2
-        let latDelta = (maxLat - minLat) * 1.2
-        let lonDelta = (maxLon - minLon) * 1.2
-
-        region = MKCoordinateRegion(
-            center: CLLocationCoordinate2D(latitude: centerLat, longitude: centerLon),
-            span: MKCoordinateSpan(latitudeDelta: latDelta, longitudeDelta: lonDelta)
-        )
-    }
-
-    private func fetchDriverLocations() {
-        let db = Firestore.firestore()
-        db.collection("DriverLocations").getDocuments { (snapshot, error) in
-            if let error = error {
-                print("Error fetching driver locations: \(error.localizedDescription)")
-                return
-            }
-            
-            var fetchedDriverLocations: [DriverLocation] = []
-            
-            for document in snapshot!.documents {
-                let data = document.data()
-                if let driverID = data["driverID"] as? String,
-                   let latitude = data["latitude"] as? Double,
-                   let longitude = data["longitude"] as? Double,
-                   let timestamp = data["timestamp"] as? Timestamp {
-                    
-                    let location = DriverLocation(id: document.documentID, driverID: driverID, latitude: latitude, longitude: longitude, timestamp: timestamp)
-                    fetchedDriverLocations.append(location)
-                }
-            }
-            
-            DispatchQueue.main.async {
-                self.driverLocations = fetchedDriverLocations
-                if let order = self.currentOrder {
-                    self.centerMapOnOrder(order)
-                }
-            }
-        }
-    }
-}
-
-func generateReadableOrderId(for date: Date) -> String {
-    let formatter = DateFormatter()
-    formatter.dateFormat = "yyyyMMdd"
-    let dateString = formatter.string(from: date)
-    let uniqueNumber = Int.random(in: 1...999)
-    return "\(dateString)-\(String(format: "%03d", uniqueNumber))"
 }

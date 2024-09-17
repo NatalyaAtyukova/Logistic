@@ -24,7 +24,8 @@ struct UserProfileView: View {
             ScrollView {
                 VStack(spacing: 20) {
                     Text("Профиль")
-                        .font(.largeTitle)
+                        .font(.system(size: 36, weight: .bold))
+                        .foregroundColor(.primary)
                         .padding(.bottom, 20)
 
                     if isEditing {
@@ -48,7 +49,6 @@ struct UserProfileView: View {
                 .padding(.horizontal)
             }
 
-            // Buttons are fixed at the bottom
             VStack {
                 if isEditing {
                     HStack {
@@ -58,7 +58,7 @@ struct UserProfileView: View {
                             Text("Отмена")
                                 .padding()
                                 .frame(maxWidth: .infinity)
-                                .background(Color.gray)
+                                .background(Color.gray.opacity(0.8))
                                 .foregroundColor(.white)
                                 .cornerRadius(10)
                         }
@@ -69,7 +69,7 @@ struct UserProfileView: View {
                             Text("Сохранить")
                                 .padding()
                                 .frame(maxWidth: .infinity)
-                                .background(Color.blue)
+                                .background(LinearGradient(gradient: Gradient(colors: [Color.blue, Color.purple]), startPoint: .leading, endPoint: .trailing))
                                 .foregroundColor(.white)
                                 .cornerRadius(10)
                         }
@@ -82,7 +82,7 @@ struct UserProfileView: View {
                         Text(isEditing ? "Отмена" : "Редактировать")
                             .padding()
                             .frame(maxWidth: .infinity)
-                            .background(Color.blue)
+                            .background(LinearGradient(gradient: Gradient(colors: [Color.blue, Color.green]), startPoint: .leading, endPoint: .trailing))
                             .foregroundColor(.white)
                             .cornerRadius(10)
                             .font(.headline)
@@ -107,23 +107,6 @@ struct UserProfileView: View {
         }
     }
 
-    func signOut() {
-        do {
-            try Auth.auth().signOut()
-            UserDefaults.standard.set(false, forKey: "isLogged")
-            UserDefaults.standard.removeObject(forKey: "userId")
-            UserDefaults.standard.removeObject(forKey: "userRole")
-            // Перенаправляем на экран входа
-            // Используем `UIApplication` для того, чтобы обновить корневой контроллер
-            if let window = UIApplication.shared.windows.first {
-                window.rootViewController = UIHostingController(rootView: ContentView())
-                window.makeKeyAndVisible()
-            }
-        } catch let signOutError as NSError {
-            print("Ошибка разлогина: %@", signOutError.localizedDescription)
-        }
-    }
-    
     var profileEditingView: some View {
         VStack(alignment: .leading, spacing: 15) {
             profileField(title: "Почта", value: email, editable: false)
@@ -207,8 +190,11 @@ struct UserProfileView: View {
                 }
             )
         }
+        .padding()
+        .background(Color.white)
+        .cornerRadius(10)
+
     }
-    
 
     var profileViewingView: some View {
         VStack(alignment: .leading, spacing: 15) {
@@ -226,6 +212,10 @@ struct UserProfileView: View {
 
             profileField(title: "Телефон", value: phoneNumber)
         }
+        .padding()
+        .background(Color.white)
+        .cornerRadius(10)
+
     }
 
     func profileField(title: String, value: String, editable: Bool = true) -> some View {
@@ -242,14 +232,31 @@ struct UserProfileView: View {
                 .multilineTextAlignment(.trailing)
         }
         .padding()
-        .background(RoundedRectangle(cornerRadius: 8).fill(Color.white))
+        .background(RoundedRectangle(cornerRadius: 10).fill(Color.white))
         .overlay(
-            RoundedRectangle(cornerRadius: 8)
+            RoundedRectangle(cornerRadius: 10)
                 .stroke(Color.gray, lineWidth: 1)
         )
         .padding(.horizontal)
     }
-
+    
+    func signOut() {
+        do {
+            try Auth.auth().signOut()
+            UserDefaults.standard.set(false, forKey: "isLogged")
+            UserDefaults.standard.removeObject(forKey: "userId")
+            UserDefaults.standard.removeObject(forKey: "userRole")
+            // Перенаправляем на экран входа
+            // Используем `UIApplication` для того, чтобы обновить корневой контроллер
+            if let window = UIApplication.shared.windows.first {
+                window.rootViewController = UIHostingController(rootView: ContentView())
+                window.makeKeyAndVisible()
+            }
+        } catch let signOutError as NSError {
+            print("Ошибка разлогина: %@", signOutError.localizedDescription)
+        }
+    }
+    
     func loadUserProfile() {
         let db = Firestore.firestore()
         let userCollection = getUserCollection(role: role)

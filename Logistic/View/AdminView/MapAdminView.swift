@@ -1,24 +1,18 @@
 import SwiftUI
-import Firebase
-import FirebaseFirestore
 import MapKit
 import CoreLocation
 
 struct MapAdminView: UIViewRepresentable {
-    @Binding var driverLocations: [DriverLocation]
+    @ObservedObject var viewModel: MapAdminViewModel // Передаем ViewModel вместо отдельных состояний
     var order: OrderItem
-    @Binding var region: MKCoordinateRegion
-    @Binding var isInitialRegionSet: Bool
 
     func makeUIView(context: Context) -> MKMapView {
         let mapView = MKMapView()
         mapView.delegate = context.coordinator
-
-        // Настройки карты
         mapView.showsUserLocation = true
         mapView.userTrackingMode = .follow
-        mapView.mapType = .standard  // .hybrid можно использовать для спутникового вида
-        mapView.isRotateEnabled = false  // Запрещаем поворот карты
+        mapView.mapType = .standard
+        mapView.isRotateEnabled = false
         return mapView
     }
 
@@ -26,8 +20,8 @@ struct MapAdminView: UIViewRepresentable {
         mapView.removeAnnotations(mapView.annotations)
         mapView.removeOverlays(mapView.overlays)
 
-        // Маркеры для водителей
-        let driverAnnotations = driverLocations.map { location -> MKPointAnnotation in
+        // Аннотации водителей
+        let driverAnnotations = viewModel.driverLocations.map { location -> MKPointAnnotation in
             let annotation = MKPointAnnotation()
             annotation.title = "Водитель"
             annotation.subtitle = "Координаты: \(location.latitude), \(location.longitude)"
@@ -35,43 +29,24 @@ struct MapAdminView: UIViewRepresentable {
             return annotation
         }
 
-        // Маркер отправления
+        // Аннотации отправления и получения
         let senderAnnotation = MKPointAnnotation()
         senderAnnotation.title = "Отправление"
         senderAnnotation.coordinate = CLLocationCoordinate2D(latitude: order.senderLatitude, longitude: order.senderLongitude)
 
-        // Маркер получения
         let recipientAnnotation = MKPointAnnotation()
         recipientAnnotation.title = "Получение"
         recipientAnnotation.coordinate = CLLocationCoordinate2D(latitude: order.recipientLatitude, longitude: order.recipientLongitude)
 
         mapView.addAnnotations(driverAnnotations + [senderAnnotation, recipientAnnotation])
-
-        // Показать все аннотации
-        let annotations = driverAnnotations + [senderAnnotation, recipientAnnotation]
-        mapView.showAnnotations(annotations, animated: true)
+        mapView.showAnnotations(driverAnnotations + [senderAnnotation, recipientAnnotation], animated: true)
 
         // Построение маршрута
-        let request = MKDirections.Request()
-        request.source = MKMapItem(placemark: MKPlacemark(coordinate: senderAnnotation.coordinate))
-        request.destination = MKMapItem(placemark: MKPlacemark(coordinate: recipientAnnotation.coordinate))
-        request.transportType = .automobile
-
-        let directions = MKDirections(request: request)
-        directions.calculate { response, error in
-            if let error = error {
-                print("Ошибка при расчете маршрута: \(error.localizedDescription)")
-                return
-            }
-
-            guard let route = response?.routes.first else { return }
-            mapView.addOverlay(route.polyline)
-
-            DispatchQueue.main.async {
-                if !isInitialRegionSet {
-                    mapView.setVisibleMapRect(route.polyline.boundingMapRect, edgePadding: UIEdgeInsets(top: 50, left: 50, bottom: 50, right: 50), animated: true)
-                    isInitialRegionSet = true
-                    region = mapView.region
+        viewModel.calculateRoute(from: senderAnnotation.coordinate, to: recipientAnnotation.coordinate) { polyline in
+            if let polyline = polyline {
+                mapView.addOverlay(polyline)
+                if !viewModel.isInitialRegionSet {
+                    viewModel.updateRegion(for: mapView, with: polyline)
                 }
             }
         }
@@ -93,17 +68,11 @@ struct MapAdminView: UIViewRepresentable {
                 let renderer = MKPolylineRenderer(polyline: polyline)
                 renderer.strokeColor = UIColor.blue.withAlphaComponent(0.7)
                 renderer.lineWidth = 5.0
-
-                // Градиентный маршрут
-                let gradientColors = [UIColor.blue.cgColor, UIColor.green.cgColor]
-                let gradientLayer = CAGradientLayer()
-                gradientLayer.colors = gradientColors
                 return renderer
             }
             return MKOverlayRenderer(overlay: overlay)
         }
 
-        // Кастомизация аннотаций
         func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
             if annotation is MKUserLocation {
                 return nil
@@ -127,7 +96,6 @@ struct MapAdminView: UIViewRepresentable {
                     annotationView?.glyphImage = UIImage(systemName: "house.fill")
                 }
                 
-                // Добавляем кнопку для навигации
                 let btn = UIButton(type: .detailDisclosure)
                 annotationView?.rightCalloutAccessoryView = btn
             } else {

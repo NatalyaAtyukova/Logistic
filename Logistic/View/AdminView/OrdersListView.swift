@@ -1,22 +1,16 @@
-
 import SwiftUI
-import Firebase
 import FirebaseFirestore
-import MapKit
-import CoreLocation
 
 struct OrdersListView: View {
-    @State private var orders: [OrderItem] = []
+    @ObservedObject private var viewModel = OrdersListViewModel()
     @Binding var selectedOrder: OrderItem?
+    @Binding var selectedTab: Int // Добавляем binding для отслеживания текущей вкладки
     @ObservedObject var alertManager: AlertManager
-    @State private var selectedStatus: String = "Все"
-    @State private var editingOrder: OrderItem? = nil
 
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
-                // Убираем дублирующийся заголовок "Список заказов"
-                Picker("Статус", selection: $selectedStatus) {
+                Picker("Статус", selection: $viewModel.selectedStatus) {
                     Text("Все").tag("Все")
                     Text("Новый").tag("Новый")
                     Text("В пути").tag("В пути")
@@ -24,16 +18,18 @@ struct OrdersListView: View {
                 }
                 .pickerStyle(SegmentedPickerStyle())
                 .padding(.horizontal)
-                .offset(y: -20) // Подправляем смещение Picker
 
-                if filteredOrders.isEmpty {
+                if viewModel.isLoading {
+                    ProgressView("Загрузка заказов...")
+                        .padding()
+                } else if viewModel.filteredOrders.isEmpty {
                     Text("Нет доступных заказов")
                         .foregroundColor(.gray)
                         .padding()
                 } else {
                     ScrollView {
                         LazyVStack(spacing: 10) {
-                            ForEach(filteredOrders) { order in
+                            ForEach(viewModel.filteredOrders) { order in
                                 VStack(alignment: .leading, spacing: 15) {
                                     HStack {
                                         VStack(alignment: .leading) {
@@ -46,7 +42,7 @@ struct OrdersListView: View {
                                         Spacer()
                                         VStack(alignment: .trailing) {
                                             Text("Крайний срок:")
-                                            Text(formatDate(order.deliveryDeadline))
+                                            Text(viewModel.formatDate(order.deliveryDeadline))
                                                 .bold()
                                         }
                                     }
@@ -58,14 +54,14 @@ struct OrdersListView: View {
                                         Text("Откуда: \(order.senderAddress)")
                                         Text("Куда: \(order.recipientAddress)")
                                         Text("Водитель: \(order.driverName)")
-                                        Text("Информация о заказе: \(order.orderInfo)")  
-                                        Text("Статус: \(order.status)")  
+                                        Text("Информация о заказе: \(order.orderInfo)")
+                                        Text("Статус: \(order.status)")
                                     }
-                                    
+
                                     HStack {
-                                        // Кнопка выбора заказа
                                         Button(action: {
                                             self.selectedOrder = order
+                                            self.selectedTab = 2 // Переключение на вкладку с картой
                                         }) {
                                             HStack {
                                                 Image(systemName: "checkmark.circle.fill")
@@ -78,9 +74,8 @@ struct OrdersListView: View {
                                             .cornerRadius(8)
                                         }
 
-                                        // Кнопка редактирования заказа
                                         Button(action: {
-                                            self.editingOrder = order
+                                            self.viewModel.editingOrder = order
                                         }) {
                                             HStack {
                                                 Image(systemName: "pencil")
@@ -109,64 +104,16 @@ struct OrdersListView: View {
                 Spacer()
             }
             .navigationBarTitle("Список заказов", displayMode: .inline)
-            .onAppear {
-                getOrders() // Получаем заказы при загрузке
+            .sheet(item: $viewModel.editingOrder) { order in
+                if let orderBinding = Binding($viewModel.editingOrder) {
+                    EditOrderView(order: orderBinding, alertManager: self.alertManager)
+                }
             }
-            .sheet(item: self.$editingOrder) { order in
-                EditOrderView(order: self.$editingOrder, alertManager: self.alertManager)
-            }
-            .alert(isPresented: $alertManager.showAlert) {
-                let title = alertManager.isError ? "Ошибка" : "Успешно"
-                return Alert(title: Text(title), message: Text(alertManager.alertMessage), dismissButton: .default(Text("OK")))
+            .alert(isPresented: $viewModel.showAlert) {
+                let title = viewModel.isError ? "Ошибка" : "Успешно"
+                return Alert(title: Text(title), message: Text(viewModel.alertMessage), dismissButton: .default(Text("OK")))
             }
             .background(Color(.systemGroupedBackground).edgesIgnoringSafeArea(.all))
         }
-    }
-
-    // Фильтрация заказов по выбранному статусу
-    var filteredOrders: [OrderItem] {
-        if selectedStatus == "Все" {
-            return orders
-        } else {
-            return orders.filter { $0.status == selectedStatus }
-        }
-    }
-
-    func getOrders() {
-        let db = Firestore.firestore()
-
-        if let currentUser = Auth.auth().currentUser {
-            db.collection("OrdersList")
-                .whereField("adminID", isEqualTo: currentUser.uid)
-                .addSnapshotListener { (snapshot, error) in
-                    if let error = error {
-                        alertManager.showError(message: "Ошибка при получении заказов: \(error.localizedDescription)")
-                        return
-                    }
-
-                    guard let documents = snapshot?.documents else {
-                        print("No documents in snapshot")
-                        return
-                    }
-
-                    self.orders = documents.compactMap { document in
-                        do {
-                            let order = try document.data(as: OrderItem.self)
-                            return order
-                        } catch {
-                            print("Error decoding order: \(error)")
-                            return nil
-                        }
-                    }
-                }
-        }
-    }
-
-    // Функция для форматирования даты
-    func formatDate(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .short
-        formatter.timeStyle = .short
-        return formatter.string(from: date)
     }
 }

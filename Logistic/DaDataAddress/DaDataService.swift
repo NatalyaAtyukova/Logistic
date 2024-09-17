@@ -19,6 +19,8 @@ struct DaDataSuggestion: Codable, Hashable {
 struct DaDataAddressData: Codable, Hashable {
     let geo_lat: String?
     let geo_lon: String?
+    var city_with_type: String? // Город с типом (например, "г. Москва")
+    var street_with_type: String? // Улица с типом (например, "ул. Ленина")
 }
 
 

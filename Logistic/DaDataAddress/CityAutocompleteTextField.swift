@@ -17,27 +17,26 @@ struct CityAutocompleteTextField: View {
     var body: some View {
         VStack {
             TextField(title, text: $city, onEditingChanged: { isEditing in
-                self.isShowingSuggestions = true
-            }, onCommit: {
-                self.isShowingSuggestions = false
-            })
-            .textFieldStyle(RoundedBorderTextFieldStyle())
-            .padding()
-            
-            if isShowingSuggestions {
-                List {
-                    ForEach(suggestions.filter {
-                        $0.lowercased().contains(city.lowercased())
-                    }, id: \.self) { suggestion in
-                        Text(suggestion)
-                            .onTapGesture {
-                                self.onCitySelected(suggestion)
-                            }
-                    }
+                if isEditing {
+                    isShowingSuggestions = true
+                } else {
+                    isShowingSuggestions = false
                 }
-                .frame(maxHeight: 200)
+            })
+            .padding()
+            .background(Color.gray.opacity(0.2))
+            .cornerRadius(8)
+            
+            // Отображаем список предложений только если isShowingSuggestions == true
+            if isShowingSuggestions && !suggestions.isEmpty {
+                List(suggestions, id: \.self) { suggestion in
+                    Text(suggestion)
+                        .onTapGesture {
+                            onCitySelected(suggestion)
+                        }
+                }
+                .frame(maxHeight: 150) // Ограничение высоты списка
             }
         }
     }
 }
-

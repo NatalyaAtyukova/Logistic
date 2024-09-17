@@ -37,10 +37,21 @@ struct AddressAutocompleteTextField: View {
                     self.suggestions = []
                 } else {
                     self.isLoading = true
-                    // Simulate API call to suggest addresses
+                    // Вызов сервиса для получения подсказок
                     DaDataService().suggestAddress(query: newValue) { suggestions in
                         DispatchQueue.main.async {
-                            self.suggestions = suggestions ?? []
+                            // Фильтруем предложения, оставляя только город и улицу
+                            self.suggestions = suggestions?.compactMap { suggestion in
+                                guard let city = suggestion.data.city_with_type,
+                                      let street = suggestion.data.street_with_type
+                                else {
+                                    return nil
+                                }
+                                // Составляем адрес только из города и улицы
+                                let formattedAddress = "\(city), \(street)"
+                                // Создаем новый suggestion с измененным value
+                                return DaDataSuggestion(value: formattedAddress, data: suggestion.data)
+                            } ?? []
                             self.isLoading = false
                             self.isShowingSuggestions = !self.suggestions.isEmpty
                         }
@@ -82,8 +93,8 @@ struct AddressAutocompleteTextField: View {
                     }
                     .padding(.horizontal, 8)
                 }
-                .frame(maxHeight: 200) // Ограничение высоты списка для скроллинга
-                .background(Color.gray.opacity(0.2)) // Фон ScrollView
+                .frame(maxHeight: 200)
+                .background(Color.gray.opacity(0.2))
                 .cornerRadius(8)
                 .overlay(
                     RoundedRectangle(cornerRadius: 8)

@@ -1,8 +1,5 @@
 import SwiftUI
 import Firebase
-import MapKit
-import CoreLocation
-import FirebaseFirestore
 
 struct FindListView: View {
     @ObservedObject var alertManager: AlertManager
@@ -15,27 +12,50 @@ struct FindListView: View {
                 if orders.isEmpty {
                     Text("Заказы не найдены")
                         .foregroundColor(.red)
+                        .font(.title3)
                         .padding()
+                        .transition(.opacity) // Плавный переход исчезновения
                 } else {
                     List(orders.filter { $0.status == "Новый" }) { order in
                         VStack(alignment: .leading, spacing: 12) {
-                            // Выводим номер заказа
-                            Text("Заказ #: \(order.id)")
-                                .font(.headline)
-                            
-                            // Остальная информация о заказе
-                            Text("Откуда: \(getCityName(from: order.senderAddress))")
-                                .font(.headline)
-                            Text("Куда: \(getCityName(from: order.recipientAddress))")
-                            Text("Компания-получатель: \(order.recipientCompany)")
-                            Text("Тип груза: \(order.cargoType)")
-                            Text("Информация о заказе: \(order.orderInfo)")
-                            Text("Вес груза: \(order.cargoWeight) кг")
-                            Text("Крайний срок доставки: \(formatDate(order.deliveryDeadline))")
+                            HStack {
+                                VStack(alignment: .leading) {
+                                    // Выводим номер заказа
+                                    Text("Заказ #: \(order.id)")
+                                        .font(.headline)
+                                        .foregroundColor(.blue)
+
+                                    // Информация о маршруте
+                                    Text("Откуда: \(getCityName(from: order.senderAddress))")
+                                        .font(.subheadline)
+                                        .foregroundColor(.gray)
+                                    Text("Куда: \(getCityName(from: order.recipientAddress))")
+                                        .font(.subheadline)
+                                        .foregroundColor(.gray)
+
+                                    // Другая информация
+                                    Text("Компания: \(order.recipientCompany)")
+                                        .font(.footnote)
+                                    Text("Тип груза: \(order.cargoType)")
+                                        .font(.footnote)
+                                    Text("Вес: \(order.cargoWeight) кг")
+                                        .font(.footnote)
+                                    Text("Срок: \(formatDate(order.deliveryDeadline))")
+                                        .font(.footnote)
+                                        .foregroundColor(.red) // Выделим крайний срок доставки
+                                }
+                                Spacer()
+
+                                // Иконка типа груза
+                                Image(systemName: "shippingbox.fill")
+                                    .resizable()
+                                    .frame(width: 50, height: 50)
+                                    .foregroundColor(.blue)
+                            }
 
                             // Кнопка "Взять в работу"
                             Button(action: {
-                                takeOrder(orderID: order.id)  // Действие при нажатии кнопки
+                                takeOrder(orderID: order.id)
                             }) {
                                 HStack {
                                     Image(systemName: "checkmark.circle.fill")
@@ -44,20 +64,22 @@ struct FindListView: View {
                                 .font(.system(size: 16, weight: .medium))
                                 .padding()
                                 .foregroundColor(.white)
-                                .background(Color.blue)
-                                .cornerRadius(8)
+                                .background(LinearGradient(gradient: Gradient(colors: [Color.blue, Color.green]), startPoint: .leading, endPoint: .trailing))
+                                .cornerRadius(12)
+                                .shadow(radius: 5)
                             }
                             .buttonStyle(PlainButtonStyle())  // Убираем системный эффект кнопки
                         }
                         .padding()
-                        .frame(maxWidth: .infinity) // Делаем карточку шире
-                        .background(Color.white)
-                        .cornerRadius(12) // Закругления только для самой карточки заказа
-                        .shadow(color: .gray.opacity(0.4), radius: 5, x: 0, y: 5)
+                        .frame(maxWidth: .infinity)
+                        .background(Color(UIColor.secondarySystemBackground))
+                        .cornerRadius(15)
+                        .shadow(color: Color.gray.opacity(0.4), radius: 5, x: 0, y: 5)
                         .padding(.horizontal)
-                        .contentShape(Rectangle()) // Устанавливаем, что вся карточка имеет форму, но не является кликабельной
+                        .contentShape(Rectangle())
                     }
-                    .listStyle(PlainListStyle()) // Убираем стиль с разделителями для списка
+                    .listStyle(PlainListStyle())
+                    .animation(.default) // Плавная анимация списка
                 }
             }
             .navigationBarTitle("Поиск заказа", displayMode: .inline)
@@ -67,9 +89,6 @@ struct FindListView: View {
                       dismissButton: .default(Text("OK")) {
                           alertManager.showAlert = false
                       })
-            }
-            .onAppear {
-                print("Displaying orders: \(orders)")
             }
             .background(Color.white.edgesIgnoringSafeArea(.all)) // Устанавливаем белый фон без закруглений
         }
@@ -111,12 +130,12 @@ struct FindListView: View {
         let components = address.split(separator: ",")
         return components.first?.trimmingCharacters(in: .whitespacesAndNewlines) ?? address
     }
-}
 
-func formatDate(_ date: Date) -> String {
-    let dateFormatter = DateFormatter()
-    dateFormatter.locale = Locale(identifier: "ru_RU")
-    dateFormatter.dateStyle = .medium
-    dateFormatter.timeStyle = .short
-    return dateFormatter.string(from: date)
+    func formatDate(_ date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "ru_RU")
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .short
+        return dateFormatter.string(from: date)
+    }
 }
